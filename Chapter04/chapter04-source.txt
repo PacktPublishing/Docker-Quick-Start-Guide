@@ -1,0 +1,113 @@
+Chapter 4 Source Code Examples
+
+# Docker volume managment command
+docker volume
+
+# Docker volume management subcommands
+docker volume create         # Create a volume
+docker volume inspect        # Display detailed information on one or more volumes
+docker volume ls             # List volumes
+docker volume rm             # Remove one or more volumes
+docker volume prune          # Remove all unused local volumes
+# Syntax for the volume create command
+Usage: docker volume create [OPTIONS] [VOLUME]
+
+# The options available to the volume create command:
+-d, --driver string         # Specify volume driver name (default "local")
+--label list                # Set metadata for a volume
+-o, --opt map               # Set driver specific options (default map[])
+
+# Using the volume create command with no optional parameters
+docker volume create 
+
+# Create a volume with a fancy name
+docker volume create my-vol-02
+
+# The Magic Screen command
+screen ~/Library/Containers/com.docker.docker/Data/com.docker.driver.amd64-linux/tty
+# or if you are using Mac OS High Sierra
+screen ~/Library/Containers/com.docker.docker/Data/vms/0/tty
+# Use <CTRL-a>k to kill the screen session
+
+# Start by creating a new volume
+docker volume create my-osx-volume
+# Now find the Mountpoint
+docker volume inspect my-osx-volume -f "{{json .Mountpoint}}"
+# Try to view the contents of the Mountpoint's folder
+sudo ls -l /var/lib/docker/volumes/my-osx-volume
+# "No such file or directory" because the directory does not exist on the OS X host
+
+# Now issue the Magic Screen command and hit <enter> to get a prompt
+screen ~/Library/Containers/com.docker.docker/Data/vms/0/tty
+# You are now root in the VM, and can issue the following command
+ls -l /var/lib/docker/volumes/my-osx-volume
+# The directory exists and you will see the actual Mountpoint sub folder "_data"
+# Now hit control-a followed by lower case k to kill the screen session
+<CTRL-a>k
+
+# mount a pre-created volume with --mount parameter
+docker container run --rm -d \
+--mount source=my-vol-02,target=/myvol \
+--name vol-demo2 \
+volume-demo2:1.0 tail -f /dev/null
+
+# VOLUME instruction Dockerfile for Docker Quick Start
+FROM alpine
+RUN mkdir /myvol
+RUN echo "Data from image" > /myvol/both-places.txt
+CMD ["sh"]
+
+# Map a single file from the host to a container
+echo "important data" > /tmp/data-file.txt
+docker container run --rm -d \
+   -v /tmp/data-file.txt:/myvol/data-file.txt \
+   --name vol-demo \
+   volume-demo2:1.0 tail -f /dev/null
+# Prove it
+docker exec vol-demo cat /myvol/data-file.txt
+
+# Using --mount with source and target
+docker container run --rm -d \
+   --mount source=my-volume,target=/myvol,readonly \
+   --name vol-demo1 \
+   volume-demo:latest tail -f /dev/null
+
+# Using --mount with source and destination
+docker container run --rm -d \
+   --mount source=my-volume,destination=/myvol,readonly \
+   --name vol-demo2 \
+   volume-demo:latest tail -f /dev/null
+
+# Using -v
+docker container run --rm -d \
+   -v my-volume:/myvol:ro \
+   --name vol-demo3 \
+   volume-demo:latest tail -f /dev/null
+
+# Check which container have mounted a volume by name
+docker ps -a --filter volume=in-use-volume
+
+# Remove volumes command syntax
+Usage: docker volume rm [OPTIONS] VOLUME [VOLUME...]
+# Prune volumes command syntax
+Usage: docker volume prune [OPTIONS]
+
+# Using a filter on the volume ls command
+docker volume ls --filter dangling=true
+
+# Step 1
+docker container run \
+   --rm -d \
+   -v data-vol-01:/data/vol1 -v data-vol-02:/data/vol2 \
+   --name data-container \
+   vol-demo2:1.0 tail -f /dev/null
+# Step 2
+docker container run \
+   --rm -d \
+   --volumes-from data-container \
+   --name app-container \
+   vol-demo2:1.0 tail -f /dev/null
+# Prove it
+docker container exec app-container ls -l /data
+# Prove it more
+docker container inspect -f '{{ range .Mounts }}{{ .Name }} {{ end }}' app-container

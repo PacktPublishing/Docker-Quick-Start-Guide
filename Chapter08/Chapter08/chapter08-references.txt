@@ -1,0 +1,6 @@
+References
+Installing Jenkins web page: https://jenkins.io/doc/book/installing/
+Docker hub search for Jenkins images: https://hub.docker.com/search/?isAutomated=0&isOfficial=0&page=1&pullCount=0&q=jenkins&starCount=0
+Official Jenkins image repo: https://hub.docker.com/_/jenkins/
+Jenkins/jenkins repo: https://hub.docker.com/r/jenkins/jenkins/
+H1kkan/jenkins-docker repo: https://hub.docker.com/r/h1kkan/jenkins-docker/

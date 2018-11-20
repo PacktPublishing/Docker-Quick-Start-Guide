@@ -1,0 +1,171 @@
+Chapter 1 Source Code Examples
+
+# Installing Docker on a CentOS workstation
+# Install Docker CE via the Docker Repository
+# installing required packages
+sudo yum install -y yum-utils \
+ device-mapper-persistent-data \
+ lvm2
+
+# adding the docker-ce repo
+sudo yum-config-manager \
+ --add-repo \
+ https://download.docker.com/linux/centos/docker-ce.repo
+
+# enable edge releases
+sudo yum-config-manager --enable docker-ce-edge
+
+# disable edge releases
+sudo yum-config-manager --disable docker-ce-edge
+
+# install docker
+sudo yum install docker-ce
+
+# validate install with version command
+docker --version
+
+# start docker deamon
+sudo systemctl start docker
+
+# run a test container
+sudo docker run hello-world
+
+# Install Docker CE manually using a downloaded RPM
+# install the docker rpm
+sudo yum install ~/Downloads/docker-ce-18.03.1.ce-1.el7.centos.x86_64.rpm
+
+# start docker
+sudo systemctl start docker
+
+# validate the install and functionality
+docker --version
+sudo docker run hello-world
+
+# Install Docker CE by running convenience scripts
+# download and run the install script
+curl -fsSL get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+
+# start docker
+sudo systemctl start docker
+
+# add the current user to the docker group
+sudo usermod -aG docker $USER
+
+# test that sudo is not needed
+docker run hello-world
+
+# configure docker to start on boot
+sudo systemctl enable docker
+
+# install docker compose
+sudo curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+
+# Installing Docker on an Ubuntu workstation
+# Install Docker CE via the Docker Repository
+
+# update apt-get libraries
+sudo apt-get update
+
+# install required packages
+sudo apt-get install \
+   apt-transport-https \
+   ca-certificates \
+   curl \
+   software-properties-common
+
+# get the GPG key for docker
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+# validating the docker GPG key is installed
+sudo apt-key fingerprint 0EBFCD88
+
+# adding the docker repository
+sudo add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
+
+# update apt-get libraries again
+sudo apt-get update
+
+# install docker
+sudo apt-get install docker-ce
+
+# validate install with version command
+docker --version
+
+# validating functionality by running a container
+sudo docker run hello-world
+
+# Install Docker CE manually using a DEB package
+# installing docker package
+sudo dpkg -i ~/Downloads/docker-ce_18.03.1~ce-0~ubuntu_amd64.deb
+
+# validating the install and functionality
+docker --version
+sudo docker run hello-world
+
+# Install Docker CE by running convenience scripts
+# install curl
+sudo apt-get install curl
+
+# download and run the docker install script
+curl -fsSL get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+
+# add the current user to the docker group
+sudo usermod -aG docker $USER
+
+# validate that sudo is no longer needed
+docker run hello-world
+
+# install docker-compose
+sudo curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+
+# Installing Docker on a Windows workstation
+# validate install and functionality
+docker --version
+docker run hello-world
+
+# Setup DockerCompletion for PowerShell
+# allow remote signed scripts to run
+Set-ExecutionPolicy RemoteSigned
+
+# install Docker completion
+Install-Module DockerCompletion -Scope CurrentUser
+
+# enable Docker completion
+Import-Module DockerCompletion
+
+# update your user profile to enable docker completion for every PowerShell command prompt
+notepad $PROFILE
+# Enter the "Import-Module DockerCompletion" command and save the profile.
+
+# Installing Docker on an OS X workstation
+# validate install and functionality
+docker --version
+docker run hello-world
+
+# Install Docker command line completion
+# install homebrew
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+
+# use homebrew to install bash completion
+brew install bash-completion
+
+# update the bash profile to enable bash completion for every terminal session 
+[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
+
+# create links for bash shell
+ln -s /Applications/Docker.app/Contents/Resources/etc/docker.bash-completion $(brew --prefix)/etc/bash_completion.d/docker
+ln -s /Applications/Docker.app/Contents/Resources/etc/docker-machine.bash-completion $(brew --prefix)/etc/bash_completion.d/docker-machine
+ln -s /Applications/Docker.app/Contents/Resources/etc/docker-compose.bash-completion $(brew --prefix)/etc/bash_completion.d/docker-compose
+
+# create links for zsh shell
+ln -s /Applications/Docker.app/Contents/Resources/etc/docker.zsh-completion /usr/local/share/zsh/site-functions/_docker
+ln -s /Applications/Docker.app/Contents/Resources/etc/docker-machine.zsh-completion /usr/local/share/zsh/site-functions/_docker-machine
+ln -s /Applications/Docker.app/Contents/Resources/etc/docker-compose.zsh-completion /usr/local/share/zsh/site-functions/_docker-compose
+Finally, restart your terminal session and you can now use Docker command completion!  Try it by typing "docker " and hitting the <TAB> key twice.

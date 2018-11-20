@@ -1,0 +1,316 @@
+Chapter 3 Source Code Examples
+
+# Dockerfile
+FROM nginx:1.15.2
+
+# hello-world Dockerfile
+FROM scratch
+COPY hello /
+CMD ["/hello"]
+
+# LABEL instruction syntax
+# LABEL <key>=<value> <key>=<value> <key>=<value> ...
+LABEL maintainer="Earl Waud <earlwaud@mycompany.com>"
+LABEL "description"="My development Ubuntu image"
+LABEL version="1.0"
+LABEL label1="value1" \
+ label2="value2" \
+ lable3="value3"
+LABEL my-multi-line-label="Labels can span \
+more than one line in a Dockerfile."
+LABEL support-email="support@mycompany.com" support-phone="(123) 456-7890"
+
+# earlier in the Dockerfile
+LABEL version="1.0"
+# later in the Dockerfile...
+LABEL version="2.0"
+# The Docker image metadata will show version="2.0"
+
+#The syntax goes like this:
+MAINTAINER "Earl Waud <earlwaud@mycompany.com>"
+
+# COPY instruction syntax
+COPY [--chown=<user>:<group>] <src>... <dest>
+# Use double quotes for paths containing whitespace)
+COPY [--chown=<user>:<group>] ["<src>",... "<dest>"]
+
+# COPY instruction Dockerfile for Docker Quick Start
+FROM alpine:latest
+LABEL maintainer="Earl Waud <earlwaud@mycompany.com>"
+LABEL version=1.0
+# copy multiple files, creating the path "/theqsg/files" in the process
+COPY file* theqsg/files/
+# copy all of the contents of folder "folder1" to "/theqsg/" 
+# (but not the folder "folder1" itself)
+COPY folder1 theqsg/
+# change the current working directory in the image to "/theqsg"
+WORKDIR theqsg
+# copy the file special1 into "/theqsg/special-files/"
+COPY --chown=35:35 special1 special-files/
+# return the current working directory to "/"
+WORKDIR /
+CMD ["sh"]
+
+# ADD instruction syntax
+ADD [--chown=<user>:<group>] <src>... <dest>
+# Use double quotes for paths containing whitespace)
+ADD [--chown=<user>:<group>] ["<src>",... "<dest>"]
+
+# ADD instruction Dockerfile for Docker Quick Start
+FROM alpine
+LABEL maintainer="Earl Waud <earlwaud@mycompany.com>"
+LABEL version=3.0
+ADD https://github.com/docker-library/hello-world/raw/master/amd64/hello-world/hello /
+RUN chmod +x /hello
+CMD ["/hello"]
+
+# ENV instruction syntax
+# This is the form to create a single environment variable per instruction
+# Everything after the space following the <key> becomes the value
+ENV <key> <value>
+# This is the form to use when you want to create more than one variable per instruction
+ENV <key>=<value> ...
+
+# ENV instruction Dockerfile for Docker Quick Start
+FROM alpine
+LABEL maintainer="Earl Waud <earlwaud@mycompany.com>"
+ENV appDescription This app is a sample of using ENV instructions
+ENV appName=env-demo
+ENV note1="The First Note First" note2=The\ Second\ Note\ Second \
+note3="The Third Note Third"
+ENV changeMe="Old Value"
+CMD ["sh"]
+
+# The ARG instruction syntax
+ARG <varname>[=<default value>]
+
+# The build-arg parameter syntax
+docker image build --build-arg <varname>[=<value>] ...
+
+# ARG instruction Dockerfile for Docker Quick Start
+FROM alpine
+LABEL maintainer="Earl Waud <earlwaud@mycompany.com>"
+ENV key1="ENV is stronger than an ARG"
+RUN echo ${key1}
+ARG key1="not going to matter"
+RUN echo ${key1}
+RUN echo ${key2}
+ARG key2="defaultValue"
+RUN echo ${key2}
+ENV key2="ENV value takes over"
+RUN echo ${key2}
+CMD ["sh"]
+
+# Build the image and look at the output from the echo commands
+ docker image build --rm \
+ --build-arg key1="buildTimeValue" \
+ --build-arg key2="good till env instruction" \
+ --tag arg-demo:2.0 .
+
+# ENV vs ARG instruction Dockerfile for Docker Quick Start
+FROM alpine
+LABEL maintainer="Earl Waud <earlwaud@mycompany.com>"
+ENV lifecycle="production"
+RUN echo ${lifecycle}
+ARG username="35"
+RUN echo ${username}
+ARG appdir
+RUN echo ${appdir}
+ADD hello /${appdir}/
+RUN chown -R ${username}:${username} ${appdir}
+WORKDIR ${appdir}
+USER ${username}
+CMD ["./hello"]
+
+# Build the arg3 demo image
+docker image build --rm \
+   --build-arg appdir="/opt/hello" \
+   --tag arg-demo:3.0 .
+
+# Run the arg3 demo container
+docker container run --rm --env lifecycle="test" arg-demo:3.0
+
+# User instruction syntax
+USER <user>[:<group>] or
+USER <UID>[:<GID>]
+
+# USER instruction Dockerfile for Docker Quick Start
+FROM alpine
+LABEL maintainer="Earl Waud <earl@mycompany.com>"
+RUN id
+USER games:games
+run id
+CMD ["sh"]
+
+# WORKDIR instruction syntax
+WORKDIR instruction syntax
+WORKDIR /path/to/workdir
+
+# WORKDIR instruction Dockerfile for Docker Quick Start
+FROM alpine
+# Absolute path...
+WORKDIR /
+# relative path, relative to previous WORKDIR instruction
+# creates new folder
+WORKDIR sub-folder-level-1
+RUN touch file1.txt
+# relative path, relative to previous WORKDIR instruction
+# creates new folder
+WORKDIR sub-folder-level-2
+RUN touch file2.txt
+# relative path, relative to previous WORKDIR instruction
+# creates new folder
+WORKDIR sub-folder-level-3
+RUN touch file3.txt
+# Absolute path, creates three sub folders...
+WORKDIR /l1/l2/l3
+CMD ["sh"]
+
+# VOLUME instruction syntax
+VOLUME ["/data"]
+# or for creating multiple volumes with a single instruction
+VOLUME /var/log /var/db /moreData
+
+# VOLUME instruction Dockerfile for Docker Quick Start
+FROM alpine
+RUN mkdir /myvol
+RUN echo "hello world" > /myvol/greeting
+VOLUME /myvol
+CMD ["sh"]
+
+# EXPOSE instruction syntax
+EXPOSE <port> [<port>/<protocol>...]
+
+# RUN instruction syntax
+# Shell form to run the command in a shell
+# For Linux the default is "/bin/sh -c"
+# For Windows the default is "cmd /S /C"
+RUN <command>
+
+# Exec form
+RUN ["executable", "param1", "param2"]
+
+# Exec form of RUN instruction using bash
+RUN ["/bin/bash", "-c", "echo hello world > /myvol/greeting"]
+
+# RUN instruction Dockerfile for Docker Quick Start
+FROM ubuntu
+RUN useradd --create-home -m -s /bin/bash dev
+RUN mkdir /myvol
+RUN echo "hello DQS Guide" > /myvol/greeting
+RUN ["chmod", "664", "/myvol/greeting"]
+RUN ["chown", "dev:dev", "/myvol/greeting"]
+VOLUME /myvol
+USER dev
+CMD ["/bin/bash"]
+
+# RUN instruction Dockerfile for Docker Quick Start
+FROM ubuntu
+RUN useradd --create-home -m -s /bin/bash dev
+# Add a fun prompt for dev user of my-app
+# whale: "\xF0\x9F\x90\xB3"
+# alien:"\xF0\x9F\x91\xBD"
+# fish:"\xF0\x9F\x90\xA0"
+# elephant:"\xF0\x9F\x91\xBD"
+# moneybag:"\xF0\x9F\x92\xB0"
+RUN echo 'PS1="\[$(tput bold)$(tput setaf 4)\]my-app $(echo -e "\xF0\x9F\x90\xB3") \[$(tput sgr0)\] [\\u@\\h]:\\W \\$ "' >> /home/dev/.bashrc && \
+    echo 'alias ls="ls --color=auto"' >> /home/dev/.bashrc
+USER dev
+CMD ["/bin/bash"]
+
+
+# CMD instruction syntax
+CMD command param1 param2 (shell form)
+CMD ["executable","param1","param2"] (exec form)
+CMD ["param1","param2"] (as default parameters to ENTRYPOINT)
+
+# CMD instruction examples
+CMD ["/bin/bash"]
+CMD while true; do echo 'DQS Expose Demo' | nc -l -p 80; done
+CMD echo "How many words are in this echo command" | wc -
+CMD tail -f /dev/null
+CMD ["-latr", "/var/opt"]
+
+# ENTRYPOINT instruction Dockerfile for Docker Quick Start
+FROM alpine
+RUN apk add curl
+ENTRYPOINT ["curl"]
+CMD ["--help"]
+
+# ENTRYPOINT instruction syntax
+ENTRYPOINT command param1 param2 (shell form)
+ENTRYPOINT ["executable", "param1", "param2"] (exec form, best practice)
+
+# HEALTHCHECK instruction syntax
+HEALTHCHECK [OPTIONS] CMD command (check container health by running a command inside the container)
+HEALTHCHECK NONE (disable any HEALTHCHECK inherited from the base image)
+
+# HEALTHCHECK CMD options
+--interval=DURATION (default: 30s)
+--timeout=DURATION (default: 30s)
+--start-period=DURATION (default: 0s)
+--retries=N (default: 3)
+
+# HEALTHCHECK instruction Dockerfile for Docker Quick Start
+FROM alpine
+RUN apk add curl
+EXPOSE 80/tcp
+HEALTHCHECK --interval=30s --timeout=3s \
+  CMD curl -f http://localhost/ || exit 1
+CMD while true; do echo 'DQS Expose Demo' | nc -l -p 80; done
+
+# ONBUILD instruction syntax
+ONBUILD [INSTRUCTION]
+
+# my-base Dockerfile
+FROM alpine
+LABEL maintainer="Earl Waud <earlwaud@mycompany.com>"
+ONBUILD LABEL version="1.0"
+ONBUILD LABEL support-email="support@mycompany.com" support-phone="(123) 456-7890"
+CMD ["sh"]
+
+# my-app Dockerfile
+FROM my-base:1.0
+CMD ["sh"]
+
+# STOPSIGNAL instruction syntax
+STOPSIGNAL signal
+
+# Sample STOPSIGNAL instruction using a position number in the syscall table
+STOPSIGNAL 9
+# or using a signal name
+STOPSIGNAL SIGQUIT
+
+# SHELL instruction syntax
+SHELL ["executable", "parameters"]
+
+# Docker image build command syntax
+Usage: docker image build [OPTIONS] PATH | URL | -
+
+# Common options used with the image build command
+--rm         Remove intermediate containers after a successful build (default true)
+--build-arg  Set build-time variables
+--tag        Name and optionally a tag in the 'name:tag' format
+--file       Name of the Dockerfile (Default is 'PATH/Dockerfile')
+
+# build command samples
+docker image build --rm --build-arg username=35 --tag arg-demo:2.0 .
+docker image build --rm --tag user-demo:1.0 .
+docker image build --rm --tag workdir-demo:1.0 .
+
+# directive=value
+# The line above shows the syntax for a parser directive
+
+# escape=\ (backslash)
+# escape=` (backtick)
+
+# build context Dockerfile for Docker Quick Start guide
+FROM scratch
+COPY hello /
+CMD ["/hello"]
+
+# Example of a .dockerignore file
+# Exclude unwanted files
+**/*~
+**/*.log
+**/.DS_Store
