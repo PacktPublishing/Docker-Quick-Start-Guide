@@ -1,24 +1,23 @@
 {
-  "name": "dqs-example-app",
-  "version": "1.0.0",
-  "description": "A Docker Quick Start Example HTTP server",
-  "main": "main.js",
-  "scripts": {
-    "test": "node test.js",
-    "start": "node main.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/earlwaud/dqs-example-app/"
-  },
-  "keywords": [
-    "node",
-    "docker",
-    "dockerfile",
-    "jenkinsfile"
-  ],
-  "author": "earlwaud@hotmail.com",
-  "license": "ISC",
-  "devDependencies": { "test": ">=0.6.0" }
+   "name": "dqs-example-app",
+   "version": "1.0.0",
+   "description": "A Docker Quick Start Example HTTP server",
+   "main": "main.js",
+   "scripts": {
+      "test": "node test.js",
+      "start": "node main.js"
+   },
+   "repository": {
+      "type": "git",
+      "url": "https://github.com/earlwaud/dqs-example-app/"
+   },
+   "keywords": [
+      "node",
+      "docker",
+      "dockerfile",
+      "jenkinsfile"
+   ],
+   "author": "earlwaud@hotmail.com",
+   "license": "ISC",
+   "devDependencies": { "test": ">=0.6.0" }
 }
-

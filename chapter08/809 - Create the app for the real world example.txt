@@ -21,8 +21,8 @@ node {
    stage('Build image') {
       /* Builds the image; synonymous to docker image build on the command line */
       /* Use a registry name if pushing into docker hub or your company registry, like this */
-      /* app = docker.build("earlwaud/jenkins-example-app") */
-      app = docker.build("jenkins-example-app")
+      /* app = docker.build("earlwaud/dqs-example-app") */
+      app = docker.build("dqs-example-app")
    }
    stage('Test image') {
       /* Execute the defined tests */

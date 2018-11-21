@@ -3,8 +3,8 @@ var http = require('http');
 
 // configure our HTTP server
 var server = http.createServer(function (request, response) {
-  response.writeHead(200, {"Content-Type": "text/plain"});
-  response.end("Hello Docker Quick Start\n");
+   response.writeHead(200, {"Content-Type": "text/plain"});
+   response.end("Hello Docker Quick Start\n");
 });
 
 // listen on localhost:8000
