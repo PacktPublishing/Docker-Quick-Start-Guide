@@ -1,4 +1,4 @@
-FROM node:10.9.0
+FROM node:10-alpine
 COPY . .
 RUN npm install
 EXPOSE 8000

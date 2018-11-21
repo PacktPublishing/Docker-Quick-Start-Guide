@@ -1,7 +1,7 @@
 {
-  "name": "getintodevops-example-app",
+  "name": "dqs-example-app",
   "version": "1.0.0",
-  "description": "A Hello World HTTP server",
+  "description": "A Docker Quick Start Example HTTP server",
   "main": "main.js",
   "scripts": {
     "test": "node test.js",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/getintodevops/bestpractices-docker-jenkins/"
+    "url": "https://github.com/earlwaud/dqs-example-app/"
   },
   "keywords": [
     "node",
@@ -17,7 +17,7 @@
     "dockerfile",
     "jenkinsfile"
   ],
-  "author": "miiro@getintodevops.com",
+  "author": "earlwaud@hotmail.com",
   "license": "ISC",
   "devDependencies": { "test": ">=0.6.0" }
 }

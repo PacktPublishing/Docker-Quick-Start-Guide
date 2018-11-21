@@ -2,20 +2,33 @@
 
 # Here are all of the custom (or non-default) values entered to configure the Docker "Cloud" in our example:
 
-Field Name	Value Used
+#Add a new cloud
+#select Docker
+
+# Expand Docker Cloud Details and enter
 Docker Host URI	unix:///var/run/docker.sock
-Docker API Version	1.38   (match the version shown in connection test)
 Docker Cloud Enabled	Checked
+
+# Test connection to get API version number
+
+# Expand Advanced
+Docker API Version	1.39   (match the version shown in connection test)
 Container Cap	10
+
+# Expand Docker Agent Templates...
+
+# Expand Add Docker Template
 Docker Agent Enabled	Checked
 Docker Agent Template Name	agent
-Docker Image	ubuntu-node01:5000/jenkins-agent:latest
+Docker Image	ubuntu-node00:5000/jenkins-agent:latest
 Instance Capacity	1
 Remote File System Root	/home/jenkins/agent
 Usage	Use this node as much as possible
 Connection Method	Attach Docker container
 User	root
 Pull Strategy	Pull once and update latest
+
+# Expand Container Settings
 Docker Command	java -jar /usr/share/jenkins/slave.jar
 Volumes	/var/run/docker.sock:/var/run/docker.sock
 Allocate a pseudo-TTY	Checked
