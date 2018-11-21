@@ -22,7 +22,7 @@ node {
       /* docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') */
 
       /* For this example, We are using our jenkins-stack service registry */
-      docker.withRegistry('https://ubuntu-node01:5000') {
+      docker.withRegistry('https://ubuntu-node00:5000') {
          app.push("latest")
       }
    }
