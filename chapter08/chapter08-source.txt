@@ -74,18 +74,19 @@ services:
        replicas: 1
        restart_policy:
          condition: on-failure
-    placement:
-      constraints: [node.role == manager]
+       placement:
+         constraints: [node.role == manager]
 
   registry:
     image: registry
     ports:
        - 5000:5000
- deploy:
-    replicas: 1
-    restart_policy:
-      condition: on-failure
-
+    deploy:
+       replicas: 1
+       restart_policy:
+         condition: on-failure
+       placement:
+         constraints: [node.role == manager]
 
 # Deploy our Jenkins application via a Docker stack
 docker stack deploy -c jenkins-stack.yml jenkins
