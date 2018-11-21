@@ -1,0 +1,31 @@
+# Create a new Jenkis pipeline job
+
+# Set poll from SCM at
+H/5 * * * *
+
+# using pipeline from SCM
+# enter the url for our dqs-example-app
+https://github.com/EarlWaud/dqs-example-app.git
+
+# Save configuration
+# Build the job
+
+# the job errors due to the Jenkinsfile having the wrong name for the Registry
+# it should have been ubuntu-node00 instead of ubuntu-node01
+
+# update the project file and push to github
+# the just will kick off with the poll from SCM
+
+# The job builds successfully
+
+# pull the newly built Doker image
+docker pull ubuntu-node00:5000/dqs-example-app:latest
+
+# run a container based on the new app image
+docker container run -d --rm -p 8000:8000 ubuntu-node00:5000/dqs-example-app:latest
+
+# browse to the app
+ubuntu-node00:8000
+
+# All that is left to do now is celebrate our success!
+

@@ -99,9 +99,3 @@ git add Dockerfile Jenkinsfile main.js package.json test.js
 git commit -m "Initial commit"
 git push origin master
 
-
-
-# Watch the console log output for reference
-
-# All that is left to do now is celebrate our success!
-
