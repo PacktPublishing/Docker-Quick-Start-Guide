@@ -1,0 +1,8 @@
+docker image ls
+cd env-demo
+ll
+cat Dockerfile
+docker image build --rm --tag env-demo:1.0 .
+docker image ls
+docker image inspect --format '{{json .Config}}' env-demo:1.0 | jq '.Env'
+docker container run --rm --env changeMe="New Value" --env adhoc="run time"  env-demo:1.0 env

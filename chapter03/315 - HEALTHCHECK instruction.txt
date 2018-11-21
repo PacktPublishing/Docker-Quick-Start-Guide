@@ -1,0 +1,26 @@
+docker image ls
+cd healthcheck-demo
+ll
+cat Dockerfile
+
+# notice the HEALTHCHECK instruction
+# we check the health using by internally curling the localhost
+# the container CMD instruction sets up a response to the curl
+
+docker image build --rm --tag healthcheck-demo:1.0 .
+
+docker image ls
+
+clear
+
+# we are opening the container on port 80
+# as requested by the Dockerfile
+
+docker container run --rm -d -p 80:80 --name health healthcheck-demo:1.0
+
+# checking the heath of the container just after starting
+docker container ls
+
+# checking again after more than 30 seconds
+docker container ls
+

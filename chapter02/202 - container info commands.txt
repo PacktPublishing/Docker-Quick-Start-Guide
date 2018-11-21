@@ -1,0 +1,112 @@
+# Container information
+# The Container Logs command
+
+# Run a container for testing
+docker container run -d --rm --name web-server -p 8080:80 nginx
+
+# the long form of the command
+# Usage: docker container logs [OPTIONS] CONTAINER
+docker container logs --follow --timestamps web-server
+# the short form of the command
+docker container logs -f -t web-server
+
+# get just the last 5 lines (there is no short form for the "--tail" parameter)
+docker container logs --tail 5 web-server
+
+# the old syntax
+docker logs web-server
+#The "--details", "--follow", "--timestamps", and "--tail" parameters are all optional,
+
+# The Container Top command
+# using the new syntax
+# Usage: docker container top CONTAINER [ps OPTIONS]
+docker container top web-server
+
+# using the old syntax
+docker top web-server
+# As you might expect, the container top command is only useful
+# for viewing the processes of a single container at a time.
+
+# The Container Inspect command
+# using the new syntax
+# Usage: docker container inspect [OPTIONS] CONTAINER [CONTAINER...]
+docker container inspect web-server
+
+# using the old syntax
+docker inspect web-server
+# this command returns a lot of data.
+# you may only be interested in a subset of the metadata.
+# you can use the "--format" parameter to narrow the data returned.
+# Check out these examples...
+
+# most of the above examples use the json processor jq.
+# if you haven't already installed it on your system, now might be a good time to do so.
+# here are the commands to install jq on each of the OSes we've used in this book:
+# lets install jq and use it with the inspect commands
+
+# install jq on Mac OS
+brew install jq
+
+# install jq on ubuntu
+sudo apt-get install jq
+
+# install jq on RHEL/CentOS
+yum install -y epel-release
+yum install -y jq
+
+# install jq on Windows using Chocolatey NuGet package manager
+chocolatey install jq
+
+# The "--format" parameter of the inspect command uses go tempates.  You can find more information about them on Docker document pages for formatting output at this URL: https://docs.docker.com/config/formatting
+
+# Getting some State data
+
+# if you want to see the state of a container you can use this command
+docker container inspect --format '{{json .State}}' web-server | jq
+
+# if you want to narrow the state data to just when the container started, use this command
+docker container inspect --format '{{json .State}}' web-server | jq '.StartedAt'
+
+# Getting some NetworkSettings data
+
+# if you are interested in the container's network settings, use this command
+docker container inspect --format '{{json .NetworkSettings}}' web-server | jq
+
+# or maybe you just want to see the ports used by the container, here is a command for that
+docker container inspect --format '{{json .NetworkSettings}}' web-server | jq '.Ports'
+
+# maybe you just want the IP address used by the container, this is the command you could use.
+docker container inspect -f '{{json .NetworkSettings}}' web-server | jq '.IPAddress'
+
+# Getting data for more than one container with a single command
+
+# maybe you want the IP Addresses for a couple containers
+
+# lets run more containers for testing
+docker container run -d --rm --name web-server2 -p 8082:80 nginx
+docker container run -d --rm --name web-server3 -p 8083:80 nginx
+
+docker container ls
+
+docker container inspect -f '{{json .NetworkSettings}}' web-server web-server2 | jq '.IPAddress'
+
+# since the output for each container is a single line, this one can be done without using jq
+docker container inspect -f '{{ .NetworkSettings.IPAddress }}' web-server web-server2 web-server3
+
+# the Container Stats command
+# another very useful Docker command is the stats command.
+# it provides live, continually updated usages statistics for one or more running containers.
+# it is a bit like using the Linux top command.
+# you can run the command with no parameters to view the stats for all running containers
+# or you can provide one or more unique container identifiers to view the stats for one or more containers specific containers.
+
+# Here are some examples of using the command:
+
+# using the new syntax, view the stats for all running containers
+docker container stats
+
+# view the stats for just two web server containers
+docker container stats web-server web-server2
+
+# using the old syntax, view stats for all running containers
+docker stats

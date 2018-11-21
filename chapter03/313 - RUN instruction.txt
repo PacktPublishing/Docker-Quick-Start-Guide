@@ -1,0 +1,19 @@
+docker image ls
+cd run-demo
+ll
+cat Dockerfile
+# notice the RUN instruction used to modify the prompt
+
+# the Dockerfile also has several RUN instructions creating a file setting perms
+docker image build --rm --tag run-demo:1.0 .
+
+# running the container will use the default Ubuntu CMD of bash
+docker container run --rm -it --name run-demo run-demo:1.0
+
+# notice the custom prompt
+
+# explore the folders and file
+ll
+cd myvol
+ll
+cat greeting

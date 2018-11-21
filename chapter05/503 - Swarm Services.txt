@@ -1,0 +1,38 @@
+# Syntax for the service create command
+docker service create --help
+
+# Create a service
+docker service create --replicas 1 --name submarine alpine ping google.com
+
+# Create a nginx web-server that redirects host traffic from port 8080 to port 80 in the container
+docker container run --detach --name web-server1 --publish 8080:80 nginx
+
+# Create a nginx web-server service using the publish parameter
+docker service create --name web-service --replicas 3 --publish published=8080,target=80 nginx
+
+# List services in the swarm
+docker service list
+
+# List the tasks associated with a service
+docker service ps web-service
+
+# Remove one or more services from the swarm
+docker service remove submarine
+
+# Remove ALL the services from the swarm
+docker service remove $(docker service list -q)
+
+# Again create a nginx web-server service using the publish parameter
+docker service create --name web-service --replicas 3 --publish published=8080,target=80 nginx
+
+# List the tasks associated with a service
+docker service ps web-service
+
+# Adjust the configured number of replicas the web-service service to 4
+docker service scale web-service=4
+
+# List the tasks associated with a service
+docker service ps web-service
+
+# List services in the swarm
+docker service list

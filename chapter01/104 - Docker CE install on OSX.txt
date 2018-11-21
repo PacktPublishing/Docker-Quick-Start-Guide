@@ -1,0 +1,49 @@
+# Installing Docker on an OS X workstation
+
+# Install Docker CE
+
+# browse to URL:
+# http:/​/store.​docker.​com/
+# log-in to docker store
+# Once logged in click the "Get Docker CE" link
+# then click the Docker community edition for Mac area and the "Get Docker" button to download the Docker.dmg file
+
+# Double click the image file to mount and open it
+# Drag the install to the Applications folder
+# open applications and launch the Docker app
+# Log into docker store within the app
+
+# validate install and functionality
+docker --version
+docker container run hello-world
+
+# install Kitematic
+# to install Kitematic, right click on the whale icon in the OSX menu notification area to open the Docker for Mac menu.
+# click on the Kitematic menu option to download (and later to run) the Kitematic application.
+# move the downloaded Kitematic app to the /Applications folder
+
+# note direct menu access to launch Kitematic in currently not working on OSX Sierra so just launch it from the /Applications folder
+
+# Install Docker command line completion
+
+# install homebrew
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+
+# use homebrew to install bash completion
+brew install bash-completion
+
+# update the bash profile to enable bash completion for every terminal session
+[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
+
+# create links for bash shell
+ln -s /Applications/Docker.app/Contents/Resources/etc/docker.bash-completion $(brew --prefix)/etc/bash_completion.d/docker
+ln -s /Applications/Docker.app/Contents/Resources/etc/docker-machine.bash-completion $(brew --prefix)/etc/bash_completion.d/docker-machine
+ln -s /Applications/Docker.app/Contents/Resources/etc/docker-compose.bash-completion $(brew --prefix)/etc/bash_completion.d/docker-compose
+
+# create links for zsh shell
+ln -s /Applications/Docker.app/Contents/Resources/etc/docker.zsh-completion /usr/local/share/zsh/site-functions/_docker
+ln -s /Applications/Docker.app/Contents/Resources/etc/docker-machine.zsh-completion /usr/local/share/zsh/site-functions/_docker-machine
+ln -s /Applications/Docker.app/Contents/Resources/etc/docker-compose.zsh-completion /usr/local/share/zsh/site-functions/_docker-compose
+
+# Finally, restart your terminal session and you can now use Docker command completion!
+# Try it by typing "docker " and hitting the <TAB> key twice.

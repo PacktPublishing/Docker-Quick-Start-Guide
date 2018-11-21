@@ -1,0 +1,12 @@
+docker image ls
+cd workdir-demo
+ll
+cat Dockerfile
+docker image build --rm --tag workdir-demo:1.0 .
+clear
+docker container ls
+clear
+docker image ls
+docker container run --rm workdir-demo:1.0 pwd
+docker image ls
+docker image rm workdir-demo:1.0

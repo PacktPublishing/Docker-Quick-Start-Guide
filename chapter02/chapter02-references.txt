@@ -1,0 +1,7 @@
+Chapter 2 References
+
+Visit the Docker registry at https://hub.docker.com/explore/
+Find all of the parameters for the container run command here: https://docs.docker.com/engine/reference/run/
+Learn about using the --format parameter with the container inspect command here: https://docs.docker.com/config/formatting
+Learn more about the json parser jq at this URL: https://stedolan.github.io/jq/
+You can find the Windows package manager Chocolatey at this address: https://chocolatey.org/

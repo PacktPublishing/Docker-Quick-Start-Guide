@@ -1,0 +1,7 @@
+docker image ls
+cd label-demo
+ll
+cat Dockerfile
+docker image build --rm --tag label-demo:1.0 .
+docker image ls
+docker image inspect --format '{{json .Config}}' label-demo:1.0 | jq '.Labels'

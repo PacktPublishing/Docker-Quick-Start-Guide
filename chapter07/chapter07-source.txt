@@ -1,0 +1,36 @@
+# Clone the sample voting application and the visualizer repos
+git clone https://github.com/EarlWaud/example-voting-app.git
+git clone https://github.com/EarlWaud/docker-swarm-visualizer.git
+
+# Use curl to get the stack YAML file
+curl -o docker-stack.yml \
+    https://raw.githubusercontent.com/earlwaud/example-voting-app/master/docker-stack.yml
+
+# Deploy the example voting application using the downloaded stack YAML file
+docker stack deploy -c docker-stack.yml voteapp
+
+# Inspect a redis replica container looking at the networks
+docker container inspect voteapp_redis.1.nwy14um7ik0t7ul0j5t3aztu5  \
+      --format '{{json .NetworkSettings.Networks}}' | jq
+
+# Inspect the worker service to see its labels
+docker service inspect voteapp_worker \
+ --format '{{json .Spec.Labels}}' | jq
+
+# Inspect the labels on a worker container
+docker container inspect voteapp_worker.1.rotx91qw12d6x8643z6iqhuoj \
+     -f '{{json .Config.Labels}}' | jq
+
+# List the stacks deployed in a swarm
+docker stack ls
+
+# List the tasks for our voteapp stack filtered by desried state
+docker stack ps voteapp --filter desired-state=running
+
+# Look at the services associated with a deployed stack
+docker stack services voteapp
+This is what we see in the example environment...
+
+# Remove a deploy stack using the rm command
+docker stack rm voteapp
+Now you see it, now you don't...

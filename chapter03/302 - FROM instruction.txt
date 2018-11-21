@@ -1,0 +1,7 @@
+docker image ls
+cd from-demo
+ll
+cat Dockerfile
+docker image build --rm --tag from-demo:1.0 .
+docker image ls
+docker container run --rm from-demo:1.0

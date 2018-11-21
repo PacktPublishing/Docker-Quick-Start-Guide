@@ -1,0 +1,6 @@
+Chapter 3 References
+
+The hello-world GitHub repo: https://github.com/docker-library/hello-world
+Learn more about using Docker volumes here: https://docs.docker.com/storage/volumes/
+Using signals with Docker article: https://medium.com/@gchudnov/trapping-signals-in-docker-containers-7a57fdda7d86
+The .dockerignore reference document: https://docs.docker.com/engine/reference/builder/#dockerignore-file

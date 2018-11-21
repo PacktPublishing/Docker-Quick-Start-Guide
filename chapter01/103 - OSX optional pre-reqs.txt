@@ -1,0 +1,17 @@
+# Installing Docker on an OS X workstation
+
+# Installing pre-reqs...
+
+# (optional) Install iTerm2
+# Browse to https://iterm2.com/
+# Download and move to applications folder
+
+# (optional) Install zsh (OSX)
+# https://github.com/robbyrussell/oh-my-zsh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+# this will fail if xcode.app is not installed prompting to install it
+# if this happens re-run the sh command
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+
+# for Ubuntu follow this guide: https://medium.com/wearetheledger/oh-my-zsh-made-for-cli-lovers-installation-guide-3131ca5491fb
+

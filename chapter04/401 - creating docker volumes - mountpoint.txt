@@ -1,0 +1,30 @@
+# Docker volume managment command
+docker volume --help
+
+# Docker volume create command
+docker volume create --help
+
+# Using the volume create command with no optional parameters
+docker volume create
+
+# Lets see it
+docker volume ls
+
+# Create a volume with a fancy name
+docker volume create my-vol-02
+
+# Lets see it
+docker volume ls
+
+# Where does Docker mount the volume
+docker volume inspect my-vol-02
+
+# Lets see it
+sudo ls -l /var/lib/docker/volumes/my-vol-02
+
+# This does not work on OSX
+# See the video for the Magic Screen command for more info
+
+# clean up by removing all volumes
+docker volume rm -f $(docker volume ls -q)
+

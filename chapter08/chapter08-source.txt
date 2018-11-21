@@ -1,0 +1,377 @@
+# If Java has not yet been installed, install it now
+sudo apt install openjdk-8-jre-headless
+
+# Install Jenkins on an Ubuntu system
+wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | sudo apt-key add -
+sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
+sudo apt-get update
+sudo apt-get install jenkins
+
+
+// Our hello world pipeline script, named "hello-test"
+node {
+   stage('Say Hello') {
+      echo 'Hello Docker Quick Start Guide Readers!'
+   }
+}
+
+
+// Our Docker hello world pipeline script, named "hello-docker-test"
+node {
+   stage('Hello via Alpine') {
+      docker.image('alpine:latest').inside {
+         sh 'echo Hello DQS Readers - from inside an alpine container!'
+      }
+   }
+}
+
+# Add the jenkins user to the docker group
+sudo usermod -aG docker jenkins
+# Then restart the jenkins service
+sudo service jenkins restart
+
+
+# Setup volume location to store Jenkins configuration
+mkdir $HOME/jenkins_home
+chown 1000 $HOME/jenkins_home
+
+
+# Deploy a Jenkins server that is configured to build Docker images
+docker container run -d -p 8080:8080 -p 50000:50000 \
+-v $HOME/jenkins_home:/var/jenkins_home \
+--name jenkins --rm jenkins/jenkins:lts
+
+
+# Setup volume location to store Jenkins configuration
+mkdir $HOME/jenkins_home
+chown 1000 $HOME/jenkins_home
+
+# Deploy a Jenkins server that is configured to build Docker images
+docker container run -d -p 8080:8080 -p 50000:50000 \
+-v $HOME/jenkins_home:/var/jenkins_home \
+-v /var/run/docker.sock:/var/run/docker.sock \
+--name jenkins --rm h1kkan/jenkins-docker:lts
+
+# Start the Docker service in the Jenkins docker container
+docker container exec -it -u root jenkins service docker start
+
+# Setup volume location to store Jenkins configuration
+mkdir $HOME/jenkins_home
+chown 1000 $HOME/jenkins_home
+
+# jenkins-stack.yml
+version: "3"
+services:
+  jenkins:
+    image: h1kkan/jenkins-docker:lts
+    ports:
+       - 8080:8080
+       - 50000:50000
+    volumes:
+       - $HOME/jenkins_home:/var/jenkins_home
+       - /var/run/docker.sock:/var/run/docker.sock
+    deploy:
+       replicas: 1
+       restart_policy:
+         condition: on-failure
+    placement:
+      constraints: [node.role == manager]
+
+  registry:
+    image: registry
+    ports:
+       - 5000:5000
+ deploy:
+    replicas: 1
+    restart_policy:
+      condition: on-failure
+
+
+# Deploy our Jenkins application via a Docker stack
+docker stack deploy -c jenkins-stack.yml jenkins
+
+
+# Make a new folder to use for the build context of your new Docker image, and cd into it
+mkdir jenkins-agent
+cd jenkins-agent
+
+# jenkins-agent Dockerfile
+FROM h1kkan/jenkins-docker:lts-alpine
+USER root
+ARG user=jenkins
+
+ENV HOME /home/${user}
+ARG VERSION=3.26
+ARG AGENT_WORKDIR=/home/${user}/agent
+
+RUN apk add --update --no-cache curl bash git openssh-client openssl procps \
+ && curl --create-dirs -sSLo /usr/share/jenkins/slave.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${VERSION}/remoting-${VERSION}.jar \
+ && chmod 755 /usr/share/jenkins \
+ && chmod 644 /usr/share/jenkins/slave.jar \
+ && apk del curl
+
+ENV AGENT_WORKDIR=${AGENT_WORKDIR}
+RUN mkdir -p /home/${user}/.jenkins && mkdir -p ${AGENT_WORKDIR}
+USER ${user}
+
+VOLUME /home/${user}/.jenkins
+VOLUME ${AGENT_WORKDIR}
+WORKDIR /home/${user}
+
+
+
+# Build our new Jenkins agent image
+docker image build -t jenkins-agent:latest .
+
+# Tag the image with our swarm service registry
+docker image tag jenkins-agent:latest ubuntu-node01:5000/jenkins-agent:latest
+
+# Push the Jenkins agent image to the registry
+docker image push ubuntu-node01:5000/jenkins-agent:latest
+
+# Here are all of the custom (or non-default) values entered to configure the Docker "Cloud" in our example:
+
+Field Name	Value Used
+Docker Host URI	unix:///var/run/docker.sock
+Docker API Version	1.38   (match the version shown in connection test)
+Docker Cloud Enabled	Checked
+Container Cap	10
+Docker Agent Enabled	Checked
+Docker Agent Template Name	agent
+Docker Image	ubuntu-node01:5000/jenkins-agent:latest
+Instance Capacity	1
+Remote File System Root	/home/jenkins/agent
+Usage	Use this node as much as possible
+Connection Method	Attach Docker container
+User	root
+Pull Strategy	Pull once and update latest
+Docker Command	java -jar /usr/share/jenkins/slave.jar
+Volumes	/var/run/docker.sock:/var/run/docker.sock
+Allocate a pseudo-TTY	Checked
+
+
+Here is the contents of the file: Dockerfile
+
+FROM node:10-alpine
+COPY . .
+RUN npm install
+EXPOSE 8000
+CMD npm start
+Here is the contents of the file: Jenkinsfile
+
+node {
+   def app
+   stage('Clone repository') {
+      /* Clone the repository to our workspace */
+      checkout scm
+   }
+   stage('Build image') {
+      /* Builds the image; synonymous to docker image build on the command line */
+      /* Use a registry name if pushing into docker hub or your company registry, like this */
+      /* app = docker.build("earlwaud/jenkins-example-app") */
+      app = docker.build("jenkins-example-app")
+   }
+   stage('Test image') {
+      /* Execute the defined tests */
+      app.inside {
+         sh 'npm test'
+      }
+   }
+   stage('Push image') {
+      /* Now, push the image into the registry */
+      /* This would probably be docker hub or your company registry, like this */
+      /* docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') */
+
+      /* For this example, We are using our jenkins-stack service registry */
+      docker.withRegistry('https://ubuntu-node01:5000') {
+         app.push("latest")
+      }
+   }
+}
+
+Here is the contents of the file:  main.js
+
+// load the http module
+var http = require('http');
+
+// configure our HTTP server
+var server = http.createServer(function (request, response) {
+   response.writeHead(200, {"Content-Type": "text/plain"});
+   response.end("Hello Docker Quick Start\n");
+});
+
+// listen on localhost:8000
+server.listen(8000);
+console.log("Server listening at http://127.0.0.1:8000/");
+
+Here is the contents of the file: package.json
+
+{
+   "name": "dqs-example-app",
+   "version": "1.0.0",
+   "description": "A Docker Quick Start Example HTTP server",
+   "main": "main.js",
+   "scripts": {
+      "test": "node test.js",
+      "start": "node main.js"
+   },
+   "repository": {
+      "type": "git",
+      "url": "https://github.com/earlwaud/dqs-example-app/"
+   },
+   "keywords": [
+      "node",
+      "docker",
+      "dockerfile",
+      "jenkinsfile"
+   ],
+   "author": "earlwaud@hotmail.com",
+   "license": "ISC",
+   "devDependencies": { "test": ">=0.6.0" }
+}
+And finally, here is the contents of the file: test.js
+
+var assert = require('assert')
+
+function test() {
+   assert.equal(1 + 1, 2);
+}
+
+if (module == require.main) require('test').run(test);
+
+
+# Initial commit of our application files to the new repo
+git add Dockerfile Jenkinsfile main.js package.json test.js
+git commit -m "Initial commit"
+git push origin master
+
+
+#Here is the full console log output for reference:
+
+Started by an SCM change
+Started by user Earl Waud
+Obtained Jenkinsfile from git https://github.com/EarlWaud/dqs-example-app.git
+Running in Durability level: MAX_SURVIVABILITY
+[Pipeline] node
+Still waiting to schedule task
+‘agent-00042y2g983xq’ is offline
+Running on agent-00042y2g983xq on docker in /home/jenkins/agent/workspace/dqs-example-app
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Clone repository)
+[Pipeline] checkout
+Cloning the remote Git repository
+Cloning repository https://github.com/EarlWaud/dqs-example-app.git
+> git init /home/jenkins/agent/workspace/dqs-example-app # timeout=10
+Fetching upstream changes from https://github.com/EarlWaud/dqs-example-app.git
+> git --version # timeout=10
+> git fetch --tags --progress https://github.com/EarlWaud/dqs-example-app.git +refs/heads/*:refs/remotes/origin/*
+> git config remote.origin.url https://github.com/EarlWaud/dqs-example-app.git # timeout=10
+> git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+> git config remote.origin.url https://github.com/EarlWaud/dqs-example-app.git # timeout=10
+Fetching upstream changes from https://github.com/EarlWaud/dqs-example-app.git
+> git fetch --tags --progress https://github.com/EarlWaud/dqs-example-app.git +refs/heads/*:refs/remotes/origin/*
+> git rev-parse refs/remotes/origin/master^{commit} # timeout=10
+> git rev-parse refs/remotes/origin/origin/master^{commit} # timeout=10
+Checking out Revision 0a0f3eae4b9b1fdd73c8125bf19e1756ff298d1f (refs/remotes/origin/master)
+> git config core.sparsecheckout # timeout=10
+> git checkout -f 0a0f3eae4b9b1fdd73c8125bf19e1756ff298d1f
+Commit message: "Initial commit"
+First time build. Skipping changelog.
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build image)
+[Pipeline] sh
+[dqs-example-app] Running shell script
++ docker build -t jenkins-example-app .
+Sending build context to Docker daemon 68.1kB
+
+Step 1/5 : FROM node:10-alpine
+---> e35872f034fd
+Step 2/5 : COPY . .
+---> 48f0f4fd042c
+Step 3/5 : RUN npm install
+---> Running in 34fe22900383
+[91mnpm notice created a lockfile as package-lock.json. You should commit this file.
+[0madded 2 packages from 7 contributors and audited 2 packages in 2.353s
+found 0 vulnerabilities
+
+Removing intermediate container 34fe22900383
+---> 3d5a079a29bc
+Step 4/5 : EXPOSE 8000
+---> Running in aa0603f85fd9
+Removing intermediate container aa0603f85fd9
+---> bd7a70301f3d
+Step 5/5 : CMD npm start
+---> Running in 188d624ab5f2
+Removing intermediate container 188d624ab5f2
+---> b228cd7c0013
+Successfully built b228cd7c0013
+Successfully tagged jenkins-example-app:latest
+[Pipeline] dockerFingerprintFrom
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Test image)
+[Pipeline] sh
+[dqs-example-app] Running shell script
++ docker inspect -f . jenkins-example-app
+.
+[Pipeline] withDockerContainer
+agent-00042y2g983xq on docker seems to be running inside container b45aa7df45c4d030a2a9449ec7942a5bd69432ce7065dfd753f6243af4230c5f
+$ docker run -t -d -u 0:0 -w /home/jenkins/agent/workspace/dqs-example-app --volumes-from b45aa7df45c4d030a2a9449ec7942a5bd69432ce7065dfd753f6243af4230c5f -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** jenkins-example-app cat
+$ docker top 8b60885146d8f2c9d0ece014288bcee81621a1c9cd516ef1ef46eb45296549e3 -eo pid,comm
+[Pipeline] {
+[Pipeline] sh
+[dqs-example-app] Running shell script
++ npm test
+
+> dqs-example-app@1.0.0 test /home/jenkins/agent/workspace/dqs-example-app
+> node test.js
+
+Running all tests:
+[32m✓ passed[39m
+Passed:1 Failed:0 Errors:0
+[Pipeline] }
+$ docker stop --time=1 8b60885146d8f2c9d0ece014288bcee81621a1c9cd516ef1ef46eb45296549e3
+$ docker rm -f 8b60885146d8f2c9d0ece014288bcee81621a1c9cd516ef1ef46eb45296549e3
+[Pipeline] // withDockerContainer
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Push image)
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withDockerRegistry
+[Pipeline] {
+[Pipeline] sh
+[dqs-example-app] Running shell script
++ docker tag jenkins-example-app ubuntu-node01:5000/jenkins-example-app:latest
+[Pipeline] sh
+[dqs-example-app] Running shell script
++ docker push ubuntu-node01:5000/jenkins-example-app:latest
+The push refers to repository [ubuntu-node01:5000/jenkins-example-app]
+cc986e676572: Preparing
+9838bda55e16: Preparing
+f87e587403a6: Preparing
+819d7ee3ee24: Preparing
+df64d3292fd6: Preparing
+df64d3292fd6: Mounted from jenkins-agent
+9838bda55e16: Pushed
+cc986e676572: Pushed
+f87e587403a6: Pushed
+819d7ee3ee24: Pushed
+latest: digest: sha256:2ab2fd2016610c451ebc68741c9a5d8f0d546e05f4c966cf5136fd581660a90e size: 1370
+[Pipeline] }
+[Pipeline] // withDockerRegistry
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
+All that is left to do now is celebrate our success!
+

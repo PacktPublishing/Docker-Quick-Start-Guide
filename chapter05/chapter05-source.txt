@@ -1,0 +1,72 @@
+# Set up your Docker swarm cluster
+docker swarm init
+
+# Get the join token for adding managers
+docker swarm join-token manager
+# Get the join token for adding workers
+docker swarm join-token worker
+
+# Rotate the worker join token
+docker swarm join-token --rotate worker
+
+# Join this node to an existing swarm
+docker swarm join --token SWMTKN-1-3ovu7fbnqfqlw66csvvfw5xgljl26mdv0dudcdssjdcltk2sen-a830tv7e8bajxu1k5dc0045zn 192.168.159.156:2377
+
+# View the current swarm certificate
+docker swarm ca
+# Rotate the swarm certificate
+docker swarm ca --rotate
+
+# Query the state of the certificate rotation in a swarm cluster
+docker node ls --format '{{.ID}} {{.Hostname}} {{.Status}} {{.TLSStatus}}'
+
+# Retrieve the current unlock key
+docker swarm unlock-key
+# Rotate to a new unlock key
+docker swarm unlock-key --rotate
+
+# Enable autolock on your swarm cluster
+docker swarm update --autolock=true
+# Adjust certificate expiry to 30 days
+docker swarm update --cert-expiry 720h
+
+# Set node03's availability to drain
+docker node update --availability drain ubuntu-node03
+
+# Promote worker nodes 04 and 05 to manager status
+docker node promote ubuntu-node04 ubuntu-node05
+# Demote manager nodes 01 and 02 to worker status
+docker node demote ubuntu-node01 ubuntu-node02
+
+# Syntax for the service create command
+# Usage: docker service create [OPTIONS] IMAGE [COMMAND] [ARG...]
+# Create a service
+docker service create --replicas 1 --name submarine alpine ping google.com
+
+# Get help with the service create command
+docker service create --help
+
+# Create a nginx web-server that redirects host traffic from port 8080 to port 80 in the container
+docker container run --detach --name web-server1 --publish 8080:80 nginx
+
+# Create a nginx web-server service using the publish parameter
+docker service create --name web-service --replicas 3 --publish published=8080,target=80 nginx
+
+# List services in the swarm
+# Usage: docker service ls [OPTIONS]
+docker service list
+
+# List the tasks associated with a service
+# Usage: docker service ps [OPTIONS] SERVICE [SERVICE...]
+docker service ps
+
+# Remove one or more services from the swarm
+# Usage: docker service rm SERVICE [SERVICE...]
+docker service remove sleepy_snyder
+
+# Remove ALL the services from the swarm
+docker service remove $(docker service list -q)
+
+# Adjust the configured number of replicas for a service
+# Usage: docker service scale SERVICE=REPLICAS [SERVICE=REPLICAS...]
+docker service scale web-service=4

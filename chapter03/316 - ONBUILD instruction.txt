@@ -1,0 +1,26 @@
+docker image ls
+cd onbuild-my-base-demo
+ll
+cat Dockerfile
+
+# notice the single LABEL instruction
+# notice the two ONBUILD instructions with LABEL instructions
+
+docker image build --rm --tag my-base:1.0 .
+
+cd ..
+cd onbuild-my-app-demo
+ll
+cat Dockerfile
+
+# notice the app image has no LABEL instructions at all
+# however it is using the base image in the FROM instruction
+
+docker image build --rm --tag my-app:1.0 .
+
+# checking the labels in the base image
+docker image inspect my-base:1.0 -f '{{json .Config.Labels}}' | jq
+
+# compared to the labels in the app image
+docker image inspect my-app:1.0 -f '{{json .Config.Labels}}' | jq
+

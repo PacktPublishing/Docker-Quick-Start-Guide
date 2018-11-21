@@ -1,0 +1,11 @@
+Chapter 4 References
+
+The Docker reference for using Docker volumes: https://docs.docker.com/storage/volumes/
+Docker volume plugin information: https://docs.docker.com/engine/extend/plugins_volume/
+Docker engine volume plugins: https://docs.docker.com/engine/extend/legacy_plugins/#volume-plugins
+The Docker volume create reference: https://docs.docker.com/engine/reference/commandline/volume_create/
+The Docker storage reference documentation: https://docs.docker.com/storage/
+Docker's Wiki document for volume remove command: https://docs.docker.com/engine/reference/commandline/volume_rm/
+Docker's Wiki document for volume prune command: https://docs.docker.com/engine/reference/commandline/volume_prune/
+Information about pruning Docker objects: https://docs.docker.com/config/pruning/
+Excellent article on data volume containers, including using them to do data backup and restore: https://www.tricksofthetrades.net/2016/03/14/docker-data-volumes/

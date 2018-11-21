@@ -1,0 +1,39 @@
+# Setup a Dockerized Jenkins server that CAN use Docker
+
+# these next steps should already be done from previous example, but check...
+# Setup volume location to store Jenkins configuration
+# mkdir $HOME/jenkins_home
+ll
+# chown 1000 $HOME/jenkins_home
+
+clear
+
+# pull the image
+docker pull h1kkan/jenkins-docker:lts
+
+# double check
+docker image ls
+
+clear
+
+# Deploy a Jenkins server that is configured to build Docker images
+
+# make sure the old jenkins container was removed
+docker container ls -a
+
+\
+docker container run -d -p 8080:8080 -p 50000:50000 \
+-v $HOME/jenkins_home:/var/jenkins_home \
+-v /var/run/docker.sock:/var/run/docker.sock \
+--name jenkins --rm h1kkan/jenkins-docker:lts
+
+# check
+docker container ls
+
+# Start the Docker service in the Jenkins docker container
+docker container exec -it -u root jenkins service docker start
+
+# the docker setup, plugins, account and jobs, will exist because
+# they were stored in the volume with $HOME/jenkins_home
+# browse to the jenkins server
+# log in and run the docker test job

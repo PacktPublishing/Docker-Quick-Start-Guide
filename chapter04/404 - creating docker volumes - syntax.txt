@@ -1,0 +1,51 @@
+# showing different ways of mounting volumes
+
+# start by building the demo image
+docker image ls
+cd volume-demo2
+ll
+cat Dockerfile
+docker image build --rm --tag volume-demos:latest .
+docker image ls
+cd ..
+
+clear
+
+# Map a single file from the host to a container
+# create the file
+echo "important data" > /tmp/data-file.txt
+# run the container that mounts the file
+docker container run --rm -d -v /tmp/data-file.txt:/myvol/data-file.txt \
+--name vol-demo volume-demos:latest tail -f /dev/null
+
+# Prove it
+docker exec vol-demo cat /myvol/data-file.txt
+
+clear
+
+# different syntax for mounting volumes
+# Using --mount with source and target
+docker container run --rm -d \
+--mount source=my-volume,target=/myvol,readonly \
+--name vol-demo1 \
+volume-demos:latest tail -f /dev/null
+
+# Using --mount with source and destination
+docker container run --rm -d \
+--mount source=my-volume,destination=/myvol,readonly \
+--name vol-demo2 \
+volume-demos:latest tail -f /dev/null
+
+# Using -v
+docker container run --rm -d \
+-v my-volume:/myvol:ro \
+--name vol-demo3 \
+volume-demos:latest tail -f /dev/null
+
+# Check which containers have mounted a volume by name
+docker container ps -a --filter volume=my-volume
+
+# clean up
+docker container rm -f $(docker container ls -aq)
+docker volume rm -f $(docker volume ls -q)
+docker image rm -f volume-demos:latest

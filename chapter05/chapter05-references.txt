@@ -1,0 +1,23 @@
+References
+Repository for SwarmKit: https://github.com/docker/swarmkit
+The Raft consensus algorithm: https://raft.github.io/
+
+Getting started with swarm mode tutorial: https://docs.docker.com/engine/swarm/swarm-tutorial/
+The docker swarm init command wiki doc: https://docs.docker.com/engine/reference/commandline/swarm_init/
+The docker swarm ca command wiki doc: https://docs.docker.com/engine/reference/commandline/swarm_ca/
+The docker swarm join-token command wiki doc: https://docs.docker.com/engine/reference/commandline/swarm_join-token/
+The docker swarm join command wiki doc: https://docs.docker.com/engine/reference/commandline/swarm_join/
+The docker swarm unlock command wiki doc: https://docs.docker.com/engine/reference/commandline/swarm_unlock/
+The docker swarm unlock-key command wiki doc: https://docs.docker.com/engine/reference/commandline/swarm_unlock-key/
+The docker swarm update command wiki doc: https://docs.docker.com/engine/reference/commandline/swarm_update/
+The docker swarm leave command wiki doc: https://docs.docker.com/engine/reference/commandline/swarm_leave/
+Learn more about Docker Secrets here: https://docs.docker.com/engine/swarm/secrets/
+
+Documentation on how nodes work: https://docs.docker.com/engine/swarm/how-swarm-mode-works/nodes/
+
+The Docker service create reference: https://docs.docker.com/engine/reference/commandline/service_create/
+
+Wiki doc with a very details overview of deploying services on a swarm: https://docs.docker.com/v17.09/engine/swarm/services/
+Read more about how services work: https://docs.docker.com/engine/swarm/how-swarm-mode-works/services/
+Docker's getting started with swarm mode training: https://docs.docker.com/v17.09/engine/swarm/swarm-tutorial/
+

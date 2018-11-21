@@ -1,0 +1,29 @@
+docker image ls
+cd volume-demo
+ll
+cat Dockerfile
+docker image build --rm --tag volume-demo:1.0 .
+docker image ls
+clear
+docker container run --rm -it --mount source=myvolsrc,target=/myvol volume-demo:1.0
+clear
+docker volume ls
+docker container run --rm -d --name vol-demo volume-demo:1.0 tail -f /dev/null
+docker volume ls
+docker container stop vol-demo
+docker container ls
+docker volume ls
+clear
+docker volume create myvolsrc
+docker container run -d --name vol-demo --mount source=myvolsrc,target=/myvol volume-demo:1.0 tail -f /dev/null
+docker container exec vol-demo ls -l /myvol
+docker volume inspect myvolsrc -f "{{.Mountpoint}}"
+echo /var/lib/docker/volumes/myvolsrc/_data/new-file.txt
+touch /var/lib/docker/volumes/myvolsrc/_data/new-file.txt\n
+sudo touch /var/lib/docker/volumes/myvolsrc/_data/new-file.txt\n
+docker container exec vol-demo ls -l /myvol
+docker container stop vol-demo
+docker container rm vol-demo
+docker volume rm myvolsrc
+docker volume ls
+docker container ls

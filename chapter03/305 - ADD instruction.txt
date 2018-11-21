@@ -1,0 +1,18 @@
+docker image ls
+cd add1-demo
+ll
+cat Dockerfile
+docker image build --rm --tag add-demo:1.0 .
+docker image ls
+docker container run --rm add-demo:1.0 ls -l -R theqsg
+cd ../add2-demo
+ll
+cat Dockerfile
+docker image build --rm --tag add-demo:2.0 .
+docker image ls
+docker container run --rm add-demo:2.0 ls -l -R theqsg
+cd ../add3-demo
+ll
+cat Dockerfile
+docker image build --rm --tag add-demo:3.0 .
+docker container run --rm add-demo:3.0

@@ -1,0 +1,41 @@
+# on node01
+
+# check swarm status
+docker node ls
+
+# View the current swarm certificate
+docker swarm ca
+
+# Rotate the swarm certificate
+docker swarm ca --rotate
+
+# Query the state of the certificate rotation in a swarm cluster
+docker node ls --format '{{.ID}} {{.Hostname}} {{.Status}} {{.TLSStatus}}'
+
+# Enable autolock on your swarm cluster
+docker swarm update --autolock=true
+
+# Retrieve the current unlock key
+docker swarm unlock-key
+
+# Rotate to a new unlock key
+docker swarm unlock-key --rotate
+
+# Adjust certificate expiry to 30 days
+docker swarm update --cert-expiry 720h
+
+# Set node03's availability to drain
+docker node update --availability drain ubuntu-node03
+
+# Promote worker nodes 04 and 05 to manager status
+docker node promote ubuntu-node04 ubuntu-node05
+
+# check swarm status
+docker node ls
+
+# Demote manager nodes 04 and 05 to worker status
+docker node demote ubuntu-node04 ubuntu-node05
+
+# check swarm status
+docker node ls
+

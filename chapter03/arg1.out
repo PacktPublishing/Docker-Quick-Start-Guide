@@ -1,0 +1,57 @@
+cd arg-demo && \
+	docker image build --rm --tag arg-demo:1.0 . 
+Sending build context to Docker daemon  2.048kB
+Step 1/13 : FROM alpine
+ ---> 11cd0b38bc3c
+Step 2/13 : LABEL maintainer="Earl Waud <earlwaud@mycompany.com>"
+ ---> Using cache
+ ---> 78327c365bdd
+Step 3/13 : ENV key1="ENV is stronger than an ARG"
+ ---> Using cache
+ ---> f0574171f1af
+Step 4/13 : RUN echo $key1
+ ---> Using cache
+ ---> fd1be9c7069d
+Step 5/13 : ARG key1="not going to matter"
+ ---> Running in 16c36a8e4ff3
+Removing intermediate container 16c36a8e4ff3
+ ---> 99d0ec5e1310
+Step 6/13 : RUN echo $key1
+ ---> Running in 13ba4939ab64
+ENV is stronger than an ARG
+Removing intermediate container 13ba4939ab64
+ ---> 71bb902e4901
+Step 7/13 : RUN echo $key1
+ ---> Running in b5ce8fe1bd51
+ENV is stronger than an ARG
+Removing intermediate container b5ce8fe1bd51
+ ---> 5f7f4e75614b
+Step 8/13 : RUN echo $key2
+ ---> Running in 383a17ace382
+
+Removing intermediate container 383a17ace382
+ ---> bcec2d640553
+Step 9/13 : ARG key2="defaultValue"
+ ---> Running in 66b1022eab60
+Removing intermediate container 66b1022eab60
+ ---> 7b57d955238c
+Step 10/13 : RUN echo $key2
+ ---> Running in af3a1ece5cc9
+defaultValue
+Removing intermediate container af3a1ece5cc9
+ ---> 4cd8e61256da
+Step 11/13 : ENV key2="ENV value takes over"
+ ---> Running in 8da2d569344f
+Removing intermediate container 8da2d569344f
+ ---> 42d8d0dc7f0c
+Step 12/13 : RUN echo $key2
+ ---> Running in 020db204f296
+ENV value takes over
+Removing intermediate container 020db204f296
+ ---> 796f78d743e8
+Step 13/13 : CMD ["sh"]
+ ---> Running in e4c9f5078621
+Removing intermediate container e4c9f5078621
+ ---> 22224a581007
+Successfully built 22224a581007
+Successfully tagged arg-demo:1.0

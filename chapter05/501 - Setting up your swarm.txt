@@ -1,0 +1,50 @@
+# Set up your Docker swarm cluster
+# starting on node01
+docker swarm init
+
+# Get the join token for adding managers
+docker swarm join-token manager
+
+#worker
+docker swarm join --token SWMTKN-1-2stga6hqcmzao2fg28028ipbpjovpq6g6r9lxzuvallwv50p4v-1a9ikomplspyww6ioi6zz759o 192.168.159.156:2377
+
+#manager
+docker swarm join --token SWMTKN-1-2stga6hqcmzao2fg28028ipbpjovpq6g6r9lxzuvallwv50p4v-0rr2jwxj620zjoqz09o6tfrvh 192.168.159.156:2377
+
+# on node02
+# Join this node as manager to an existing swarm
+docker swarm join --token SWMTKN-1-2stga6hqcmzao2fg28028ipbpjovpq6g6r9lxzuvallwv50p4v-0rr2jwxj620zjoqz09o6tfrvh 192.168.159.156:2377
+
+# back on node01
+# Rotate the manager join token (for demo purposes)
+docker swarm join-token --rotate manager
+
+# Get the new join token for adding managers
+docker swarm join-token manager
+
+# on node03
+# Join this node as another manager using new rotated key
+docker swarm join --token SWMTKN-1-2stga6hqcmzao2fg28028ipbpjovpq6g6r9lxzuvallwv50p4v-3mrob9bilrjz10xjvi4v0j0vq 192.168.159.156:2377
+
+# Get the join token for adding workers
+docker swarm join-token worker
+
+# on node04
+# Join this node as worker to the existing swarm
+docker swarm join --token SWMTKN-1-2stga6hqcmzao2fg28028ipbpjovpq6g6r9lxzuvallwv50p4v-1a9ikomplspyww6ioi6zz759o 192.168.159.155:2377
+
+# on node05
+# Join this node as worker to the existing swarm
+docker swarm join --token SWMTKN-1-2stga6hqcmzao2fg28028ipbpjovpq6g6r9lxzuvallwv50p4v-1a9ikomplspyww6ioi6zz759o 192.168.159.155:2377
+
+# on node06
+# Join this node as manager to the existing swarm
+docker swarm join --token SWMTKN-1-2stga6hqcmzao2fg28028ipbpjovpq6g6r9lxzuvallwv50p4v-1a9ikomplspyww6ioi6zz759o 192.168.159.155:2377
+
+# on node01
+# check the stats of the swarm
+docker node ls
+
+# node01 is leader, 1 of 3 managers 01, 02, and 03
+# nodes 04, 05 and 06 are workers
+

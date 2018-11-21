@@ -1,0 +1,19 @@
+# create our first jenkins job
+
+// Our hello world pipeline script, named "hello-test"
+node {
+   stage('Say Hello') {
+      echo 'Hello Docker Quick Start Guide Readers!'
+   }
+}
+
+# create a jenkins job that uses Docker
+
+// Our Docker hello world pipeline script, named "hello-docker-test"
+node {
+   stage('Hello via Alpine') {
+      docker.image('alpine:latest').inside {
+         sh 'echo Hello DQS Readers - from inside an alpine container!'
+      }
+   }
+}

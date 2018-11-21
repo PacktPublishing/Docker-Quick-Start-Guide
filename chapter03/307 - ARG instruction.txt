@@ -1,0 +1,18 @@
+cd arg-demo
+ll
+cat Dockerfile
+docker image build --rm --tag arg-demo:1.0 .
+docker image inspect --format '{{json .Config}}' arg-demo:1.0 | jq '.Env'
+docker container run --rm arg-demo:1.0 env
+clear
+docker image build --rm --build-arg key1="buildTimeValue" --build-arg key2="good till env instruction" --tag arg-demo:2.0 .
+docker image inspect --format '{{json .Config}}' arg-demo:1.0 | jq '.Env'
+docker container run --rm arg-demo:2.0 env
+clear
+cd ../arg3-demo
+ll
+cat Dockerfile
+docker image build --rm --build-arg username=35 --build-arg appdir="/opt/hello" --tag arg-demo:3.0 .
+docker container run --rm --env lifecycle="test" arg-demo:3.0
+docker image ls
+docker image rm arg-demo:1.0 arg-demo:2.0 arg-demo:3.0

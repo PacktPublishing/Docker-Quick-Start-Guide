@@ -1,0 +1,32 @@
+# build the demo image
+docker image ls
+cd volume-demo2
+ll
+cat Dockerfile
+docker image build --rm --tag volume-demo2:1.0 .
+docker image ls
+cd ..
+
+clear
+
+# mount a pre-created volume with --mount parameter
+docker volume create my-vol-02
+docker container run --rm -d --mount source=my-vol-02,target=/myvol \
+--name vol-demo2 volume-demo2:1.0 tail -f /dev/null
+
+# lets see it
+docker container ls
+docker volume ls
+
+# show the contents of the file on the local filesysem
+sudo cat /var/lib/docker/volumes/my-vol-02/_data/both-places.txt
+
+# show the contents of the file in the contaier
+docker container exec -it vol-demo2 cat /myvol/both-places.txt
+
+# they match
+
+# clean up
+docker container rm -f $(docker container ls -aq)
+docker volume rm -f $(docker volume ls -q)
+docker image rm -f volume-demos:latest

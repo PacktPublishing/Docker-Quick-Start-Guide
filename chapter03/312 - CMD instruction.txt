@@ -1,0 +1,12 @@
+docker image ls
+cd cmd-demo
+ll
+cat Dockerfile
+
+docker image build --rm --tag cmd-demo:1.0 .
+
+# using the default CMD in the Ubuntu image (which is bash)
+docker container run --rm -it --name cmd-demo cmd-demo:1.0
+
+# now override the default CMD by providing one in the run command
+docker container run --rm -it --name cmd-demo cmd-demo:1.0 ls

@@ -1,0 +1,16 @@
+# Install a Jenkins stand alone server
+# If Java has not yet been installed, install it now
+sudo apt install openjdk-8-jre-headless
+
+clear
+
+# Install Jenkins on an Ubuntu system
+wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | sudo apt-key add -
+sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
+sudo apt-get update
+sudo apt-get install jenkins
+
+# Let's log in to the server using admin password
+http://ubuntu-jenkins:8080
+# customize jenkis - install suggested plugins
+

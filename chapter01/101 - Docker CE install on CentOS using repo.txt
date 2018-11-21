@@ -1,0 +1,52 @@
+# Installing Docker on a CentOS workstation
+# Install Docker CE via the Docker Repository
+
+# installing required packages
+sudo yum install -y yum-utils \
+ device-mapper-persistent-data \
+ lvm2
+
+# adding the docker-ce repo
+sudo yum-config-manager \
+ --add-repo \
+ https://download.docker.com/linux/centos/docker-ce.repo
+
+# enable edge releases
+sudo yum-config-manager --enable docker-ce-edge
+
+# disable edge releases
+sudo yum-config-manager --disable docker-ce-edge
+
+# install docker
+sudo yum install docker-ce
+
+# validate install with version command
+docker --version
+
+# start docker deamon
+sudo systemctl start docker
+
+# run a test container
+sudo docker run hello-world
+
+# add the current user to the docker group
+sudo usermod -aG docker $USER
+
+# logout and back in as you normally would to pick up the group change
+# I am using pkill just for the demo
+sudo pkill -u $USER
+
+# test that sudo is not needed
+docker run hello-world
+
+# configure docker to start on boot
+sudo systemctl enable docker
+
+# install docker compose
+sudo curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+
+# set execute permission on docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+
+# validate install of docker-compose
+docker-compose --version

@@ -1,0 +1,14 @@
+References
+Docker Compose Overview: https://docs.docker.com/compose/overview/
+Docker stack command reference: https://docs.docker.com/engine/reference/commandline/stack/
+Docker samples: https://github.com/dockersamples
+Docker voting app example: https://github.com/dockersamples/example-voting-app
+My fork of the voting app: https://github.com/EarlWaud/example-voting-app
+The compose file reference: https://docs.docker.com/compose/compose-file/
+Some compose file examples to explore: https://github.com/play-with-docker/stacks
+Docker samples images on Docker hub: https://hub.docker.com/u/dockersamples/
+Official redis image tags found on Docker hub: https://hub.docker.com/r/library/redis/tags/
+A great article about using the Docker daemon socket: https://medium.com/lucjuggery/about-var-run-docker-sock-3bfd276e12fd
+The stack deploy command reference: https://docs.docker.com/engine/reference/commandline/stack_deploy/
+The stack ps command reference: https://docs.docker.com/engine/reference/commandline/stack_ps/
+The stack services command reference: https://docs.docker.com/engine/reference/commandline/stack_services/

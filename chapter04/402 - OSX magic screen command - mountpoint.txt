@@ -1,0 +1,33 @@
+# an immportant disctinction between Docker on Linux and Docker on Mac
+# it that on a Mac, Docker is actually running in a VM
+# as such, volumes are not created directly on the OSX filesystem
+# instead they are created inside the VM
+# let's take a look
+
+# Start by creating a new volume
+docker volume create my-osx-volume
+
+# Now find the Mountpoint
+docker volume inspect my-osx-volume -f "{{json .Mountpoint}}"
+
+# Try to view the contents of the Mountpoint's folder
+
+sudo ls -l /var/lib/docker/volumes/my-osx-volume
+# "No such file or directory" because the directory does not exist on the OS X host
+
+clear
+# remember where the volume lives
+docker volume ls
+docker volume inspect my-osx-volume -f "{{json .Mountpoint}}"
+
+# Now issue the Magic Screen command and hit <enter> to get a prompt
+screen ~/Library/Containers/com.docker.docker/Data/vms/0/tty
+
+# You are now root in the secret VM, and can issue the following command
+ls -l /var/lib/docker/volumes/my-osx-volume
+# The directory exists and you will see the actual Mountpoint sub folder "_data"
+# Now hit control-a followed by lower case k to kill the screen session
+# then Y for yes
+<CTRL-a>k
+
+# now you are back in the OSX terminal

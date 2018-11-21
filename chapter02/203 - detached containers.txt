@@ -1,0 +1,97 @@
+# running the container detached
+docker container run --detach --name web-server1 nginx
+
+# running the container interactively
+# using the long form of the parameters
+docker container run --interactive --tty --name web-server2 nginx bash
+
+# using the short form of the parameters (joined as one), which is much more common usage
+docker container run -it --name web-server3 nginx bash
+
+# running interactively using the default CMD
+docker container run -it --name earls-dev ubuntu
+
+# run a container detached (include -it)
+docker container run --detach -it --name web-server4 -p 8080:80 nginx
+
+# show that the container is running
+docker container ps
+
+# attach to the container
+# Usage: docker container attach [OPTIONS] CONTAINER
+docker container attach web-server4
+
+# issue a <ctrl-pq> keystroke to detach (except for Docker on Mac, see below for special Mac instructions)
+
+# again, show that the container is running detached.
+docker container ps
+
+# when you are using Docker for Mac, remember to always add the "--sig-proxy=false" parameter
+docker attach --sig-proxy=false web-server4
+
+# list containers
+docker container ls
+
+# remove all containers running or not
+docker container rm -f $(docker container ls -aq)
+
+# list containers (should be none)
+docker container ls -a
+
+# The Container Exec command
+# start an nginx container detached
+docker container run --detach -it --name web-server1 -p 8080:80 nginx
+
+# see that the container is currently running
+docker container ls
+
+# execute other commands in the running container
+# Usage: docker container exec [OPTIONS] CONTAINER COMMAND [ARG...]
+
+# check version
+docker container exec web-server1 cat /etc/debian_version
+
+# interactive bash session
+docker container exec -it web-server1 bash
+
+# confirm that the container is still running
+docker container ls
+
+# The Container Commit command, creates Docker images
+
+# run an ubuntu container
+# running interactively using the default CMD
+docker container run -it --name earls-dev ubuntu
+
+# show jq not installed
+jq --version
+
+# do an apt-get update
+apt-get update
+
+# install jq
+apt-get install jq
+
+# create a new image using the commit command
+# Usage: docker container commit [OPTIONS] CONTAINER [REPOSITORY[:TAG]]
+docker container commit earls-dev new-ubuntu
+
+# use the new image
+docker container run -it --name new-dev new-ubuntu
+
+# show jq is installed
+jq --version
+
+# The "--publish" parameter includes pairs of port numbers separated by a colon.  For example:
+# create an nginx web-server that redirects host traffic from port 8080 to port 80 in the container
+docker container run --detach --name web-server1 --publish 8080:80 nginx
+
+# all of these can be running at the same time
+docker container run --detach --name web-server2 --publish 8081:80 nginx
+docker container run --detach --name web-server3 --publish 8082:80 nginx
+docker container run --detach --name web-server4 --publish 8083:80 nginx
+
+# however if you tried to run this one too, it would fail to run
+#    because the host already has port 8080 assigned to web-server1
+docker container run --detach --name web-server5 --publish 8080:80 nginx
+

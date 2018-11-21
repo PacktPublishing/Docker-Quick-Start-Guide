@@ -1,0 +1,32 @@
+docker image ls
+cd entrypoint-demo
+ll
+cat Dockerfile
+# notice the ENTRYPOINT and CMD instructions
+
+docker image build --rm --tag entrypoint-demo:1.0 .
+docker image ls
+
+# with no override CMD this will combine the ENTRYPOINT and default CMD
+# we will see the results of a curl --help
+docker container run --rm --name my-mkdir entrypoint-demo:1.0
+
+# if we provde a CMD override we can curl a url
+docker container run --rm --name my-mkdir entrypoint-demo:1.0 google.com
+
+cd ..
+cd entrypoint2-demo
+ll
+cat Dockerfile
+# notice the ENTRYPOINT and CMD instructions again
+
+docker image build --rm --tag entrypoint-demo:2.0 .
+
+# with no override CMD this will combine the ENTRYPOINT and CMD
+# essentially we created a containerized ping tool
+
+docker container run --rm --name my-ping entrypoint-demo:2.0
+
+# if we provide a CMD override of a host, we will ping that host
+docker container run --rm --name my-ping entrypoint-demo:2.0 google.com
+

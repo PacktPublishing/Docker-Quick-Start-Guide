@@ -1,0 +1,8 @@
+docker image ls
+cd user-demo
+ll
+cat Dockerfile
+docker image build --rm --tag user-demo:1.0 .
+docker image ls
+clear
+docker container run --rm user-demo:1.0 id

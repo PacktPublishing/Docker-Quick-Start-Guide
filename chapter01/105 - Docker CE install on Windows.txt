@@ -1,0 +1,48 @@
+# Installing Docker on a Windows workstation
+
+# browse to this link:
+# store.​docker.​com
+# log into docker store
+# browse to the docker on windows page
+# click get docker download button
+
+# after the installer has downloaded, click the run button
+# configure - add shortcut, do NOT use windows containers
+# you will need to log out and back in after intall
+# Docker will start automatically after log in
+# Hyper-V needs to be installed, restarts will be needed
+# Docker start takes longer the first time
+# log in to docker hub we prompted
+
+# validate install and functionality
+docker --version
+docker run hello-world
+
+# Setup DockerCompletion for PowerShell
+# allow remote signed scripts to run
+# this step must use administrator session
+Set-ExecutionPolicy RemoteSigned
+
+# back to user session
+# install Docker completion
+Install-Module DockerCompletion -Scope CurrentUser
+
+# enable Docker completion
+Import-Module DockerCompletion
+
+# update your user profile to enable docker completion for every PowerShell command prompt
+notepad $PROFILE
+# Enter the "Import-Module DockerCompletion" command and save the profile.
+
+# install Kitematic
+# right click on docker icon
+# click on the Kitematic menu option
+# download the application
+# unzip the downloaded app to c:\Program Files\Docker with a folder named Kitematic
+# right click docker icon again, and click the Kitematic menu again to validate
+# log into docker hub
+# test by running the hello-world-ngnix container
+
+# there is an issue with the current release of Kitematic
+# if you have trouble roll back to v0.17.3 found here: https://github.com/docker/kitematic/releases
+# download v0.17.3 and replace the installed version with v0.17.3

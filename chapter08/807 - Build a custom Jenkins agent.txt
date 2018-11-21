@@ -1,0 +1,38 @@
+# Build a custom Jenkins agent
+
+# Make a new folder to use for the build context of your new Docker image, and cd into it
+mkdir jenkins-agent
+cd jenkins-agent
+
+# jenkins-agent Dockerfile
+FROM h1kkan/jenkins-docker:lts-alpine
+USER root
+ARG user=jenkins
+
+ENV HOME /home/${user}
+ARG VERSION=3.26
+ARG AGENT_WORKDIR=/home/${user}/agent
+
+RUN apk add --update --no-cache curl bash git openssh-client openssl procps \
+ && curl --create-dirs -sSLo /usr/share/jenkins/slave.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${VERSION}/remoting-${VERSION}.jar \
+ && chmod 755 /usr/share/jenkins \
+ && chmod 644 /usr/share/jenkins/slave.jar \
+ && apk del curl
+
+ENV AGENT_WORKDIR=${AGENT_WORKDIR}
+RUN mkdir -p /home/${user}/.jenkins && mkdir -p ${AGENT_WORKDIR}
+USER ${user}
+
+VOLUME /home/${user}/.jenkins
+VOLUME ${AGENT_WORKDIR}
+WORKDIR /home/${user}
+
+
+# Build our new Jenkins agent image
+docker image build -t jenkins-agent:latest .
+
+# Tag the image with our swarm service registry
+docker image tag jenkins-agent:latest ubuntu-node01:5000/jenkins-agent:latest
+
+# Push the Jenkins agent image to the registry
+docker image push ubuntu-node01:5000/jenkins-agent:latest

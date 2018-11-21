@@ -1,0 +1,52 @@
+# using volumes-from
+
+# start by building the demo image
+docker image ls
+cd volume-demo2
+ll
+cat Dockerfile
+docker image build --rm --tag volume-demos:latest .
+docker image ls
+cd ..
+
+clear
+
+# Step 1 - Create the data container
+\
+docker container run \
+--rm -d \
+-v data-vol-01:/data/vol1 -v data-vol-02:/data/vol2 \
+--name data-container \
+volume-demos:latest tail -f /dev/null
+
+# Step 2 - Create the app container that uses the data container
+\
+docker container run \
+--rm -d \
+--volumes-from data-container \
+--name app-container \
+volume-demos:latest tail -f /dev/null
+
+# Prove it
+docker container exec app-container ls -l /data
+
+# Prove it more
+docker container inspect -f '{{ range .Mounts }}{{ .Name }} {{ end }}' app-container
+
+# clean up
+
+# stop the containers (volumes will still exist)
+docker container stop app-container data-container
+docker volume ls
+
+# remove volume even though they are still in use (be careful)
+docker volume prune --force
+
+# now remove the containers (already gone due to --rm)
+docker container rm -f $(docker container ls -aq)
+
+# remove all volumes (should be none left now)
+docker volume rm -f $(docker volume ls -q)
+
+# remove the image
+docker image rm -f volume-demos:latest

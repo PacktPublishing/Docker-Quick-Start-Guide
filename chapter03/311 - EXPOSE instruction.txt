@@ -1,0 +1,31 @@
+docker image ls
+cd expose-demo
+ll
+cat Dockerfile
+docker image build --rm --tag expose-demo:1.0 .
+docker image ls
+clear
+
+# "****Dockerfile has EXPOSE, but not including -p in run"
+docker container run --rm -d --name expose-demo-noports expose-demo:1.0
+
+# "****The port command will show no ports open"
+docker port expose-demo-noports
+docker container stop expose-demo-noports
+
+# "****Dockerfile has EXPOSE, and we are including -p in run"
+docker container run --rm -d --name expose-demo-withport80 -p 8888:80 expose-demo:1.0
+
+# "****The port command will show port 80 open throuh host port 8888"
+docker port expose-demo-withport80
+
+# "****Testing the port with curl should show a response"
+curl localhost:8888
+docker container stop expose-demo-withport80
+
+# "****Dockerfile has EXPOSE, and we are including -P in run"
+docker container run --rm -d --name expose-demo-withallports -P expose-demo:1.0
+
+# "****The port command should show ALL EXPOSE ports"
+docker port expose-demo-withallports
+docker container stop expose-demo-withallports

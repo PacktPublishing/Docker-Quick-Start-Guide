@@ -1,0 +1,72 @@
+# Set up Jenkins to use Docker
+
+# test out the Jenkins job that uses Docker
+# job fails
+# Need to install Docker
+
+clear
+
+# we need to install docker on the Jenkins server...
+# using the same steps outlined in chapter 1
+# update apt-get libraries
+sudo apt-get update
+
+# install required packages
+\
+sudo apt-get install \
+   apt-transport-https \
+   ca-certificates \
+   curl \
+   software-properties-common
+
+# get the GPG key for docker
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+# validating the docker GPG key is installed
+sudo apt-key fingerprint 0EBFCD88
+
+# adding the docker repository
+\
+sudo add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
+
+# update apt-get libraries again
+sudo apt-get update
+
+# install docker
+sudo apt-get install docker-ce
+
+# validate install with version command
+docker --version
+
+# validating functionality by running a container
+sudo docker run hello-world
+
+# add the current user to the docker group
+sudo usermod -aG docker $USER
+
+# logout and back in as you normally would to pick up the group change
+# I am using pkill just for the demo
+sudo pkill -u $USER
+
+# validate that sudo is no longer needed
+docker run hello-world
+
+# install docker-compose
+sudo curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+
+# add execute permissions to docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+
+# validate install of docker-compose
+docker-compose --version
+
+# Add the jenkins user to the docker group
+sudo usermod -aG docker jenkins
+# Then restart the jenkins service
+sudo service jenkins restart
+
+# run the jenkins job that uses Docker again
+# it works

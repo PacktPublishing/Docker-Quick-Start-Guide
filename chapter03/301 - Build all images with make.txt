@@ -1,0 +1,163 @@
+#!/bin/sh -v
+
+# get the full sample repo
+git clone https://github.com/EarlWaud/dqs-samples.git
+
+# list images (none expected)
+docker image ls
+
+
+sleep 10
+
+# review the makefile in chapter03 folder
+cd dqs-samples
+cd chapter03
+less Makefile
+
+
+sleep 10
+
+# build all sample images
+make all
+
+
+sleep 10
+
+# list images built
+docker image ls
+
+
+sleep 10
+
+# execute FROM examples
+ll from-demo/
+cat from-demo/Dockerfile
+make run-from
+
+
+sleep 10
+
+# execute LABEL examples
+ll label-demo/
+cat label-demo/Dockerfile
+make run-label
+
+
+sleep 10
+
+# execute COPY examples
+ll copy-demo/
+cat copy-demo/Dockerfile
+make run-copy
+
+
+sleep 10
+
+# execute ADD examples
+ll add1-demo/
+cat add1-demo/Dockerfile
+ll add2-demo/
+cat add2-demo/Dockerfile
+ll add3-demo/
+cat add3-demo/Dockerfile
+make run-add
+
+
+sleep 10
+
+# execute ENV examples
+ll env-demo/
+cat env-demo/Dockerfile
+make run-env
+
+sleep 10
+
+# execute ARG examples
+ll arg-demo/
+cat arg-demo/Dockerfile
+ll arg3-demo/
+cat arg3-demo/Dockerfile
+make run-arg1
+make run-arg2
+make run-arg3
+
+sleep 10
+
+
+# execute USER examples
+ll user-demo/
+cat user-demo/Dockerfile
+make run-user
+
+sleep 10
+
+
+# execute WORKDIR examples
+ll workdir-demo/
+cat workdir-demo/Dockerfile
+make run-workdir
+
+sleep 10
+
+
+# execute RUN examples
+ll run-demo/
+cat run-demo/Dockerfile
+make run-run
+
+sleep 10
+
+
+# execute VOLUME examples
+ll volume-demo/
+cat volume-demo/Dockerfile
+make run-volume1
+make run-volume2
+make run-volume3
+
+sleep 10
+
+
+# execute EXPOSE examples
+ll expose-demo/
+cat expose-demo/Dockerfile
+make run-expose1
+make run-expose2
+make run-expose3
+
+sleep 10
+
+
+# execute CMD examples
+ll cmd-demo/
+cat cmd-demo/Dockerfile
+make run-cmd
+
+sleep 10
+
+# execute ENTRYPOINT examples
+ll entrypoint-demo/
+cat entrypoint-demo/Dockerfile
+ll entrypoint2-demo/
+cat entrypoint2-demo/Dockerfile
+make run-entrypoint
+make run-entrypoint2
+
+sleep 10
+
+
+# execute HEALTHCHECK examples
+ll healthcheck-demo/
+cat healthcheck-demo/Dockerfile
+make run-healthcheck
+
+sleep 10
+
+
+# execute ONBUILD examples
+ll onbuild-my-base-demo/
+cat onbuild-my-base-demo/Dockerfile
+ll onbuild-my-app-demo/
+cat onbuild-my-app-demo/Dockerfile
+make run-onbuild
+

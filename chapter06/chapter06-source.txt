@@ -1,0 +1,88 @@
+# Docker network managment command
+docker network
+
+# Docker network management subcommands
+docker network connect           # Connect a container to a network
+docker network create            # Create a network
+docker network disconnect        # Disconnect a container from a network
+docker network inspect           # Display detailed information on one or more networks
+docker network ls                # List networks
+docker network rm                # Remove one or more networks
+docker network prune             # Remove all unused networks
+
+# Install the weave network driver plug-in
+sudo curl -L git.io/weave -o /usr/local/bin/weave
+sudo chmod a+x /usr/local/bin/weave
+# Disable checking for new versions
+export CHECKPOINT_DISABLE=1
+# Start up the weave network
+weave launch [for 2nd, 3rd, etc. optional hostname or IP of 1st Docker host running weave]
+# Set up the environment to use weave
+eval $(weave env)
+
+# Start up weave on the 2nd node
+weave launch node01
+
+# Peer host node02 with the weave network by connecting from node01
+weave connect node02
+
+# On ubuntu-node01:
+# Install and setup the weave driver
+sudo curl -L git.io/weave -o /usr/local/bin/weave
+sudo chmod a+x /usr/local/bin/weave
+export CHECKPOINT_DISABLE=1
+weave launch
+eval $(weave env)
+
+# On ubuntu-node02:
+# Install and setup the weave driver
+sudo curl -L git.io/weave -o /usr/local/bin/weave
+sudo chmod a+x /usr/local/bin/weave
+export CHECKPOINT_DISABLE=1
+weave launch
+eval $(weave env)
+
+# Now, back on ubuntu-node01:
+# Bring node02 in as a peer on node01's weave network
+weave connect ubuntu-node02
+
+# Starting with ubuntu-node01:
+# Run a container detached on node01
+docker container run -d --name app01 alpine tail -f /dev/null
+
+# Now, launch a container on ubuntu-node02:
+# Run a container detached on node02
+docker container run -d --name app02 alpine tail -f /dev/null
+
+# Since we are on node02, we will check there first...
+# From inside the app02 container running on node02,
+#    let's ping the app01 container running on node01
+docker container exec -it app02 ping -c 4 app01
+
+# Similarly, from inside the app01 container running on node01,
+#   let's ping the app02 container running on node02
+docker container exec -it app01 ping -c 4 app02
+
+# Docker network create command syntax
+# Usage: docker network create [OPTIONS] NETWORK
+
+# Create a new overlay network, with all default options
+docker network create -d overlay defaults-over
+
+# Create a new overlay network with specific IP settings
+docker network create -d overlay \
+--subnet=172.30.0.0/24 \
+--ip-range=172.30.0.0/28 \
+--gateway=172.30.0.254 \
+specifics-over
+# Initial validation
+docker network inspect specifics-over --format '{{json .IPAM.Config}}' | jq
+
+# Create service tester1
+docker service create --detach --replicas 3 --name tester1 \
+  --network specifics-over alpine tail -f /dev/null
+# Create service tester2
+docker service create --detach --replicas 3 --name tester2 \
+  --network specifics-over alpine tail -f /dev/null
+# From a container in the tester1 service ping the tester2 service by name
+docker container exec -it tester1.3.5hj309poppj8jo272ks9n4k6a ping -c 3 tester2

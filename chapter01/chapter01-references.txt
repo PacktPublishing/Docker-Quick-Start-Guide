@@ -1,0 +1,28 @@
+Chapter 1 References
+
+Containerization history reference can be seen here https://en.wikipedia.org/wiki/Operating-system-level_virtualization
+Find the LXC Project at Canonical here https://linuxcontainers.org/lxc/
+Explore the Libcontainer repo here https://github.com/opencontainers/runc/tree/master/libcontainer
+Datadog Docker adoption facts report https://www.datadoghq.com/docker-adoption/
+Docker’s detail regarding Containers and Layers can be found here https://docs.docker.com/storage/storagedriver/#container-and-layers
+Read about the aufs file system here https://docs.docker.com/storage/storagedriver/aufs-driver/
+Read about the Overlay file system here https://docs.docker.com/storage/storagedriver/overlayfs-driver/
+Explore Official Docker Hub repositories at this link https://hub.docker.com/explore/
+Understand the make up of an Offical Docker repo with info from https://docs.docker.com/docker-hub/official_repos/
+Learn more about Docker Swarm here  https://docs.docker.com/engine/swarm/#feature-highlights
+Docker Enterprise Edition data can be found here: https://www.docker.com/enterprise-edition
+Docker Community Edition data can be found here: https://www.docker.com/community-edition
+Download Docker CE for CentOS at this link: https://store.docker.com/editions/community/docker-ce-server-centos
+Download Docker CE for Ubuntu at this link: https://store.docker.com/editions/community/docker-ce-server-ubuntu
+Download Docker CE for Windows at this link: https://store.docker.com/editions/community/docker-ce-desktop-windows
+Download Docker CE for Mac at this link: https://store.docker.com/editions/community/docker-ce-desktop-mac
+Visit the Docker CE Stable RPM download site for CentOS here: https://download.docker.com/linux/centos/7/x86_64/stable/Packages
+Check out the Docker Install Repo here: https://github.com/docker/docker-install 
+Visit the Docker CE DEB package download site for Ubuntu here: https://download.docker.com/linux/ubuntu/dists/
+Learn about running Windows Docker containers on Windows on this site: https://blog.docker.com/2016/09/build-your-first-docker-windows-server-container/
+Learn more about DockerCompletion for PowerShell here: https://github.com/matt9ucci/DockerCompletion
+Find Docker CE for the Mac at the following URL: https://store.docker.com/editions/community/docker-ce-desktop-mac
+Read about command line completion for the Mac here: https://docs.docker.com/docker-for-mac/#install-shell-completion
+Install Homebrew on your Mac here: https://brew.sh/
+Docker for Windows limitations info can be found here: https://docs.docker.com/docker-for-windows/troubleshoot/#limitations-of-windows-containers-for-localhost-and-published-ports
+Docker for Mac Limitations info can be found here: https://docs.docker.com/v17.09/docker-for-mac/networking/#known-limitations-use-cases-and-workarounds

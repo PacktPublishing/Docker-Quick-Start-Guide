@@ -1,0 +1,14 @@
+References
+Pets vs cattle talk slide-deck: https://www.slideshare.net/randybias/architectures-for-open-and-scalable-clouds
+Libnetwork project: https://github.com/docker/libnetwork
+Libnetwork design: https://github.com/docker/libnetwork/blob/master/docs/design.md
+Calico network driver: https://www.projectcalico.org/
+Contiv network driver: http://contiv.github.io/
+Weave network driver: https://www.weave.works/docs/net/latest/overview/
+Excellent, in-depth Docker article for Docker networking: https://success.docker.com/article/networking
+Learn about networking with Overlay Networks: https://docs.docker.com/network/network-tutorial-overlay/
+Learn more about using MACVLAN networks: https://docs.docker.com/v17.12/network/macvlan/
+Detailed instructions for installing and using the weave network driver: https://www.weave.works/docs/net/latest/overview/
+Weaveworks weave github repo: https://github.com/weaveworks/weave
+Documentation for the network create command: https://docs.docker.com/engine/reference/commandline/network_create/
+Want to have a go at service discovery, then check this out: https://training.play-with-docker.com/swarm-service-discovery/

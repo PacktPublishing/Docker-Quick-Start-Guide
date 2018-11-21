@@ -1,0 +1,60 @@
+# Use curl to get the stack YAML file
+\
+curl -o docker-stack.yml \
+https://raw.githubusercontent.com/earlwaud/example-voting-app/master/docker-stack.yml
+
+# view the compose-stack file
+cat docker-stack.yml
+
+clear
+
+# Deploy the example voting application using the downloaded stack YAML file
+docker stack deploy -c docker-stack.yml voteapp
+
+# view the stack
+docker stack ls
+docker stack ps voteapp
+docker stack services voteapp
+
+# Inspect a redis replica container looking at the networks
+# we need the container name
+docker container ls
+\
+docker container inspect voteapp_redis.<USE COPIED NAME> \
+--format '{{json .NetworkSettings.Networks}}' | jq
+
+# Inspect the worker service to see its labels
+\
+docker service inspect voteapp_worker \
+--format '{{json .Spec.Labels}}' | jq
+
+# Inspect the labels on a worker container
+# we need the container name
+docker container ls
+\
+docker container inspect voteapp_worker.<USE COPIED NAME> \
+-f '{{json .Config.Labels}}' | jq
+
+# List the stacks deployed in a swarm
+docker stack ls
+
+# List the tasks for our voteapp stack filtered by desried state
+docker stack ps voteapp --filter desired-state=running
+
+# Look at the services associated with a deployed stack
+# note the ports
+docker stack services voteapp
+
+# tryout the various services via browser
+ubuntu-node01:5000
+ubuntu-node01:5001
+ubuntu-node01:8080
+
+
+# Remove a deploy stack using the rm command
+docker stack rm voteapp
+
+# Now you see it, now you don't...
+
+# List the stacks deployed in a swarm
+docker stack ls
