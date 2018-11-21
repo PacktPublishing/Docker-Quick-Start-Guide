@@ -9,7 +9,8 @@ COPY . .
 RUN npm install
 EXPOSE 8000
 CMD npm start
-Here is the contents of the file: Jenkinsfile
+
+#Here is the contents of the file: Jenkinsfile
 
 node {
    def app
@@ -81,6 +82,7 @@ Here is the contents of the file: package.json
    "license": "ISC",
    "devDependencies": { "test": ">=0.6.0" }
 }
+
 And finally, here is the contents of the file: test.js
 
 var assert = require('assert')

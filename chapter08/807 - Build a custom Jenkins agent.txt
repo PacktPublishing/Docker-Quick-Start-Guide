@@ -4,7 +4,7 @@
 mkdir jenkins-agent
 cd jenkins-agent
 
-# jenkins-agent Dockerfile
+# create the jenkins-agent Dockerfile
 FROM h1kkan/jenkins-docker:lts-alpine
 USER root
 ARG user=jenkins
@@ -32,7 +32,25 @@ WORKDIR /home/${user}
 docker image build -t jenkins-agent:latest .
 
 # Tag the image with our swarm service registry
-docker image tag jenkins-agent:latest ubuntu-node01:5000/jenkins-agent:latest
+docker image tag jenkins-agent:latest ubuntu-node00:5000/jenkins-agent:latest
 
 # Push the Jenkins agent image to the registry
-docker image push ubuntu-node01:5000/jenkins-agent:latest
+docker image push ubuntu-node00:5000/jenkins-agent:latest
+
+# if you get an error like:
+#The push refers to repository [ubuntu-node00:5000/jenkins-agent]
+#Get https://ubuntu-node00:5000/v2/: http: server gave HTTP response to HTTPS client
+
+sudo vi /etc/docker/daemon.json
+
+# add this line
+{ "insecure-registries":["ubuntu-node00:5000"] }
+
+# restart docker
+service docker restart
+
+# verify docker is up
+docker version
+
+# Retry the to push the Jenkins agent image to the registry
+docker image push ubuntu-node00:5000/jenkins-agent:latest
