@@ -51,6 +51,12 @@ With the following software and hardware list you can run all code files present
 | 8 | A system with at least 8 GB ram, 2 CPUs, and 20 GB of HDD, more is ok | Linux OS recommended |
 
 
+## Code in Action
+
+Click on the following link to see the Code in Action:
+[http://bit.ly/2Q1DbPq](http://bit.ly/2Q1DbPq)
+
+
 ### Related products
 * Docker Cookbook - Second Edition  [[Packt]](https://india.packtpub.com/in/virtualization-and-cloud/docker-cookbook-second-edition?utm_source=github&utm_medium=repository&utm_campaign=) [[Amazon]](https://www.amazon.com/dp/1788626869)
 
