@@ -2,7 +2,7 @@
 
 <a href="https://www.packtpub.com/networking-and-servers/docker-quick-start-guide?utm_source=github&utm_medium=repository&utm_campaign=9781789347326 "><img src="https://d1ldz4te4covpm.cloudfront.net/sites/default/files/imagecache/ppv4_main_book_cover/B11211.png" alt="Docker Quick Start Guide" height="256px" align="right"></a>
 
-This is the code repository for [Docker Quick Start Guide](https://www.packtpub.com/networking-and-servers/docker-quick-start-guide?utm_source=github&utm_medium=repository&utm_campaign=9781789347326 ), published by Packt.
+This is the code repository for [Docker Quick Start Guide](https://www.packtpub.com/networking-and-servers/docker-quick-start-guide?utm_source=github&utm_medium=repository&utm_campaign=9781789347326), published by Packt.
 
 **Learn Docker like a boss, and finally own your applications**
 
