@@ -49,7 +49,6 @@ With the following software and hardware list you can run all code files present
 | 5 | Two systems with at least: 1 GB ram, 1 CPU, and 20 GB HDD, more is ok | Linux OS recommended |
 | 6 | Two systems with at least: 1 GB ram, 1 CPU, and 20 GB HDD, more is ok | Linux OS recommended |
 | 8 | A system with at least 8 GB ram, 2 CPUs, and 20 GB of HDD, more is ok | Linux OS recommended |
-|  |  |  |
 
 
 ### Related products
@@ -73,12 +72,6 @@ Currently, Earl is a senior software engineer with Intuit Inc. Other books by Ea
 [Chef: Powerful Infrastructure Automation](https://www.packtpub.com/virtualization-and-cloud/chef-powerful-infrastructure-automation?utm_source=github&utm_medium=repository&utm_campaign=9781788392976 )
 
 [Mastering Chef Provisioning](https://www.packtpub.com/networking-and-servers/mastering-chef-provisioning?utm_source=github&utm_medium=repository&utm_campaign=9781785888915 )
-
-[]()
-
-[]()
-
-[]()
 
 ### Suggestions and Feedback
 [Click here](https://docs.google.com/forms/d/e/1FAIpQLSdy7dATC6QmEL81FIUuymZ0Wy9vH1jHkvpY57OiMeKGqib_Ow/viewform) if you have any feedback or suggestions.
